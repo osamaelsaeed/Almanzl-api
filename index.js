@@ -4,6 +4,7 @@ import morgan from 'morgan';
 
 import productRouter from './src/routes/product.routes.js';
 import globalErrorHandler from './src/utils/globalErrorHandler';
+import AppError from './src/utils/AppError.js';
 
 const app = express();
 dotenv.config();
