@@ -5,7 +5,7 @@ export const getProductById = async (id, next) => {
     const product = await Product.findById(id);
 
     if (!product) {
-        throw new AppError(404, FAIL, 'No such Product');
+        throw new AppError('No such Product', 404);
     }
 
     return product;
