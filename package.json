@@ -1,22 +1,28 @@
 {
-  "name": "almanzl-api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "nodemon index"
-  },
-  "type": "module",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "mongoose": "^8.19.2"
-  },
-  "devDependencies": {
-    "morgan": "^1.10.1",
-    "nodemon": "^3.1.10"
-  }
+    "name": "almanzl-api",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "format": "prettier --write .",
+        "start": "nodemon server"
+    },
+    "type": "module",
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^17.2.3",
+        "express": "^5.1.0",
+        "express-async-handler": "^1.2.0",
+        "mongodb": "^6.20.0",
+        "mongoose": "^8.19.2",
+        "validator": "^13.15.20"
+    },
+    "devDependencies": {
+        "morgan": "^1.10.1",
+        "nodemon": "^3.1.10",
+        "prettier": "^3.6.2"
+    }
 }
