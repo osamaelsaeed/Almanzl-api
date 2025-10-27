@@ -1,4 +1,5 @@
 import AppError from './AppError';
+import { ERROR } from './reposnseStatus';
 
 const handleCastErrorDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}`;
@@ -42,7 +43,7 @@ const sendErrorProd = (err, res) => {
 
     //2) Send Error
     res.status(500).json({
-      status: 'error',
+      status: ERROR,
       message: 'Something went wrong',
     });
   }
@@ -56,7 +57,7 @@ const handleJWTExpiredError = () =>
 
 export default (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'Error';
+  err.status = err.status || ERROR;
 
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res);

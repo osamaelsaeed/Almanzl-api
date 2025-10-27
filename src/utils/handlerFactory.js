@@ -1,6 +1,7 @@
 import ApiFeatures from './apiFeatures';
 import AppError from './AppError';
 import catchAsync from './catchAsync';
+import { SUCCESS } from './reposnseStatus';
 
 const getModelNameInLowerCase = (Model) => Model.modelName.toLowerCase();
 
@@ -11,7 +12,7 @@ export const deleteOne = (Model) =>
     if (!doc) {
       return next(new AppError(`No ${modelName} found with that ID`, 404));
     }
-    res.status(204).json({ status: 'success', data: null });
+    res.status(204).json({ status: SUCCESS, data: null });
   });
 
 export const updateOne = (Model) =>
@@ -25,14 +26,14 @@ export const updateOne = (Model) =>
     if (!doc) {
       return next(new AppError(`No ${modelName} found with that ID`, 404));
     }
-    res.status(200).json({ status: 'success', data: doc });
+    res.status(200).json({ status: SUCCESS, data: doc });
   });
 
 export const createOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.create(req.body);
     res.status(201).json({
-      status: 'success',
+      status: SUCCESS,
       data: doc,
     });
   });
@@ -54,7 +55,7 @@ export const getOne = (Model, populateOptions) =>
     }
 
     res.status(200).json({
-      status: 'success',
+      status: SUCCESS,
       data: doc,
     });
   });
@@ -81,7 +82,7 @@ export const getAll = (Model, populateOptions = null, nestedFilter = {}) =>
     const docs = await query;
 
     res.status(200).json({
-      status: 'success',
+      status: SUCCESS,
       results: docs.length,
       // This is called envelope
       data: docs,
