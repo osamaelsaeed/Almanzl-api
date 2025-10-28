@@ -1,16 +1,32 @@
-import "dotenv/config";
-import express from "express";
-import initDB from "./src/config/db.js";
-import requestLogger from "./src/middlewares/requestLogger.js";
-
-import { PORT, NODE_ENV } from "./src/config/config.js";
+import 'dotenv/config';
+import express, { urlencoded } from 'express';
+import initDB from './src/config/db.js';
+import morgan from 'morgan';
+import { PORT, NODE_ENV } from './src/config/config.js';
 
 initDB();
+
+import productRouter from './src/routes/product.routes.js';
+import globalErrorHandler from './src/utils/globalErrorHandler.js';
+import AppError from './src/utils/AppError.js';
+
 const app = express();
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(requestLogger);
+app.use(urlencoded({ extended: true }));
+
+if (NODE_ENV === 'development') {
+    app.use(morgan('dev'));
+}
+
+app.use('/api/products', productRouter);
+
+app.all('*all', (req, res, next) =>
+    next(new AppError(`Can't find ${req.originalUrl} on this server`, 404))
+);
+app.use(globalErrorHandler);
 
 app.listen(PORT, () => {
-  console.log(`app Listining at port ${PORT} (mode: ${NODE_ENV}) `);
+    console.log(`app is running on port ${PORT}`);
 });
+export default app;
