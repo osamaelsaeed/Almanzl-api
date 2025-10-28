@@ -7,8 +7,9 @@ import { PORT, NODE_ENV } from './src/config/config.js';
 initDB();
 
 import productRouter from './src/routes/product.routes.js';
+import userRouter from './src/routes/user.routes.js';
 import globalErrorHandler from './src/utils/globalErrorHandler.js';
-import AppError from './src/utils/AppError.js';
+import AppError from './src/utils/appError.js';
 
 const app = express();
 
@@ -20,6 +21,7 @@ if (NODE_ENV === 'development') {
 }
 
 app.use('/api/products', productRouter);
+app.use('/api/auth', userRouter);
 
 app.all('*all', (req, res, next) =>
     next(new AppError(`Can't find ${req.originalUrl} on this server`, 404))
