@@ -1,7 +1,7 @@
-import ApiFeatures from './apiFeatures';
-import AppError from './AppError';
+import ApiFeatures from './apiFeatures.js';
+import AppError from './AppError.js';
 import asyncHandler from 'express-async-handler';
-import { SUCCESS } from './reposnseStatus';
+import { SUCCESS } from './reposnseStatus.jsy';
 
 const getModelNameInLowerCase = (Model) => Model.modelName.toLowerCase();
 
