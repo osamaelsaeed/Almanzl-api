@@ -7,8 +7,12 @@ import {
 } from '../controllers/product.controller.js';
 const router = express.Router();
 
-router.route('/').get(getAllProducts).post(addProduct);
+router.route('/')
+    .get(getAllProducts)
+    .post(addProduct);
 
-router.route('/:id').patch(updateProduct).delete(deleteProduct);
+router.route('/:id')
+    .patch(updateProduct)
+    .delete(deleteProduct);
 
 export default router;
