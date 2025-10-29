@@ -60,7 +60,7 @@ export const getOne = (Model, populateOptions) =>
         });
     });
 
-export const getAll = (Model, populateOptions = null, nestedFilter = {}) => 
+export const getAll = (Model, populateOptions = null, nestedFilter = {}) =>
     asyncHandler(async (req, res, next) => {
         const filter = {};
         Object.entries(nestedFilter || {}).forEach(([paramName, fieldName]) => {
@@ -68,7 +68,6 @@ export const getAll = (Model, populateOptions = null, nestedFilter = {}) =>
                 filter[fieldName] = req.params[paramName];
             }
         });
-
         const features = new ApiFeatures(Model.find(filter), req.query)
             .filter()
             .sort()

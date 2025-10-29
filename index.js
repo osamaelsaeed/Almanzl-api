@@ -12,6 +12,7 @@ import AppError from './src/utils/AppError.js';
 
 const app = express();
 
+app.set('query parser', 'extended');
 app.use(express.json());
 app.use(urlencoded({ extended: true }));
 
