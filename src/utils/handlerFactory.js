@@ -1,7 +1,7 @@
 import ApiFeatures from './apiFeatures.js';
 import AppError from './AppError.js';
 import asyncHandler from 'express-async-handler';
-import { SUCCESS } from './reposnseStatus.jsy';
+import { SUCCESS } from './reposnseStatus.js';
 
 const getModelNameInLowerCase = (Model) => Model.modelName.toLowerCase();
 
@@ -60,7 +60,7 @@ export const getOne = (Model, populateOptions) =>
         });
     });
 
-export const getAll = (Model, populateOptions = null, nestedFilter = {}) =>
+export const getAll = (Model, populateOptions = null, nestedFilter = {}) => 
     asyncHandler(async (req, res, next) => {
         const filter = {};
         Object.entries(nestedFilter || {}).forEach(([paramName, fieldName]) => {
@@ -68,23 +68,20 @@ export const getAll = (Model, populateOptions = null, nestedFilter = {}) =>
                 filter[fieldName] = req.params[paramName];
             }
         });
-        //EXECUTE QUERY
         const features = new ApiFeatures(Model.find(filter), req.query)
             .filter()
             .sort()
             .limitFields()
             .paginate();
-        // const docs = await features.query.explain();
+
         let { query } = features;
-        if (populateOptions) {
-            query = query.populate(populateOptions);
-        }
+        if (populateOptions) query = query.populate(populateOptions);
+
         const docs = await query;
 
         res.status(200).json({
             status: SUCCESS,
             results: docs.length,
-            // This is called envelope
             data: docs,
         });
     });

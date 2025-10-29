@@ -1,63 +1,46 @@
 import asyncHandler from 'express-async-handler';
-import { SUCCESS, FAIL } from './../utils/reposnseStatus.js';
 import Product from '../models/product.model.js';
-import { getProductById } from '../utils/helpers/productHelper.js';
+import * as Factory from '../utils/handlerFactory.js';
+import { SUCCESS } from '../utils/reposnseStatus.js';
+import ApiFeatures from '../utils/apiFeatures.js';
 
-export const getAllProducts = asyncHandler(async (req, res, next) => {
-    const allProducts = await Product.find();
+export const getAllProducts = Factory.getAll(Product);
 
-    res.status(200).json({
-        status: SUCCESS,
-        msg: 'Products retrived successfully!',
-        results: allProducts?.length,
-        data: {
-            allProducts,
-        },
-    });
-});
+export const getProduct = Factory.getOne(Product);
 
-export const addProduct = asyncHandler(async (req, res, next) => {
-    const newProduct = new Product(req.body);
-    console.log('newProduct', newProduct);
-    await newProduct.save();
+export const addProduct = Factory.createOne(Product);
 
-    res.status(201).json({
-        status: SUCCESS,
-        msg: 'Product created successfully!',
-        data: {
-            newProduct,
-        },
-    });
-});
+export const updateProduct = Factory.updateOne(Product);
 
-export const updateProduct = asyncHandler(async (req, res, next) => {
-    const params = req.params;
+export const deleteProduct = Factory.deleteOne(Product);
 
-    const product = await getProductById(params?.id, next);
-    console.log('product', product);
-    const updatedProduct = await Product.findByIdAndUpdate(params?.id, req.body, {
-        new: true,
-        runValidators: true,
-    });
+export const searchForProduct = asyncHandler(async (req, res, next) => {
+    const { query } = req.params;
+
+    const features = new ApiFeatures(Product.find({
+        "$or": [
+            {
+                name: {
+                    $regex: query,
+                    $options: "i"
+                }
+            }
+        ]
+    }), req.query)
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate();
+
+    
+    const finalResult = await features.query;
 
     res.status(200).json({
         status: SUCCESS,
-        msg: 'Product updated successfully!',
+        msg: 'Search for product result',
+        results: finalResult.length,
         data: {
-            updatedProduct,
-        },
-    });
-});
-
-export const deleteProduct = asyncHandler(async (req, res, next) => {
-    const params = req.params;
-    await Product.findByIdAndDelete(params?.id);
-
-    res.status(204).json({
-        status: SUCCESS,
-        msg: 'Product deleted successfully!',
-        data: {
-            undefined,
-        },
-    });
+            finalResult
+        }
+    })
 });
