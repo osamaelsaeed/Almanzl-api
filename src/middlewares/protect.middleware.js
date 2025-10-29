@@ -1,9 +1,9 @@
-import catchAsync from '../utils/catchAsync.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
 import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
 import AppError from '../utils/AppError.js';
 
-export const protect = catchAsync(async (req, res, next) => {
+export const protect = asyncHandler(async (req, res, next) => {
     const { authorization } = req.headers;
     let token;
     if (authorization && authorization.startsWith('Bearer')) {

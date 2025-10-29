@@ -1,7 +1,7 @@
 import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
 import AppError from '../utils/AppError.js';
-import catchAsync from '../utils/catchAsync.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
 
 const signToken = (id) =>
     jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -15,7 +15,7 @@ const sendUserWithToken = (user, statusCode, req, res) => {
 };
 
 // Signup controller
-export const signup = catchAsync(async (req, res, next) => {
+export const signup = asyncHandler(async (req, res, next) => {
     const user = await User.create({
         name: req.body.name,
         phone: req.body.phone,
@@ -26,7 +26,7 @@ export const signup = catchAsync(async (req, res, next) => {
 });
 
 // Login controller
-export const login = catchAsync(async (req, res, next) => {
+export const login = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
     if (!email || !password) {
         return next(new AppError('You should provide bothe email and password', 400));
@@ -44,7 +44,7 @@ export const login = catchAsync(async (req, res, next) => {
 //restpassword controller
 
 // Protect middleware
-export const protect = catchAsync(async (req, res, next) => {
+export const protect = asyncHandler(async (req, res, next) => {
     const { authorization } = req.headers;
     let token;
     if (authorization && authorization.startsWith('Bearer')) {
