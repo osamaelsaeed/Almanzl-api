@@ -1,6 +1,6 @@
 import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
-import AppError from '../utils/appError.js';
+import AppError from '../utils/AppError.js';
 import catchAsync from '../utils/catchAsync.js';
 
 const signToken = (id) =>
