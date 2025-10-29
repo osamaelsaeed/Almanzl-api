@@ -11,7 +11,7 @@ const orderSchema = new mongoose.Schema(
             type: String,
             required: true,
             enum: ['cash', 'stripe'],
-            default: cash,
+            default: 'cash',
         },
         orderItems: [
             {
@@ -25,7 +25,6 @@ const orderSchema = new mongoose.Schema(
                     required: true,
                     default: 1,
                 },
-                subprice: { type: Number, required: true },
             },
         ],
         shippingAddress: {

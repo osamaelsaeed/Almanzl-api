@@ -1,6 +1,8 @@
 import express from 'express';
-import { getAllProducts } from '../controllers/product.controller';
-import { authMiddleWare } from '../middlewares/authMiddleware';
+import { getAllOrders, createOrderWithStripe } from '../controllers/order.controller.js';
 const router = express.Router();
 
-router.route('/').get(authMiddleWare, getAllProducts);
+router.route('/').get(getAllOrders);
+router.route('/create-checkout-session').post(createOrderWithStripe);
+
+export default router;
