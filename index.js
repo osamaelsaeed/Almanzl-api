@@ -2,9 +2,11 @@ import 'dotenv/config';
 import express, { urlencoded } from 'express';
 import initDB from './src/config/db.js';
 import morgan from 'morgan';
-import { PORT, NODE_ENV } from './src/config/config.js';
+import { stripe } from 'stripe';
+import { PORT, NODE_ENV, STRIPE_API_KEY } from './src/config/config.js';
 
 initDB();
+stripe(STRIPE_API_KEY);
 
 import productRouter from './src/routes/product.routes.js';
 import globalErrorHandler from './src/utils/globalErrorHandler.js';
