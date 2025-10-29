@@ -1,7 +1,7 @@
 import catchAsync from '../utils/catchAsync.js';
 import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
-import AppError from '../utils/appError.js';
+import AppError from '../utils/AppError.js';
 
 export const protect = catchAsync(async (req, res, next) => {
     const { authorization } = req.headers;

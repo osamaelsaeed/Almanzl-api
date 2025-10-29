@@ -9,7 +9,7 @@ initDB();
 import productRouter from './src/routes/product.routes.js';
 import userRouter from './src/routes/user.routes.js';
 import globalErrorHandler from './src/utils/globalErrorHandler.js';
-import AppError from './src/utils/appError.js';
+import AppError from './src/utils/AppError.js';
 
 const app = express();
 
