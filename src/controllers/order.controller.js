@@ -15,7 +15,7 @@ export const getAllOrders = asyncHandler(async (req, res) => {
     });
 });
 export const createOrderWithStripe = asyncHandler(async (req, res) => {
-    const userId = '6900f34e8767bc2b572d6efe';
+    const userId = req.id;
     const { orderItems, shippingAddress, itemsPrice, shippingPrice, discountAmount } = req.body;
     if (!orderItems || orderItems.length === 0) {
         throw new AppError('No order items provided', 400);

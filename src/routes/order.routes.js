@@ -1,8 +1,9 @@
 import express from 'express';
 import { getAllOrders, createOrderWithStripe } from '../controllers/order.controller.js';
+import { protect } from '../controllers/auth.controller.js';
 const router = express.Router();
 
-router.route('/').get(getAllOrders);
-router.route('/create-checkout-session').post(createOrderWithStripe);
+router.route('/').get(protect, getAllOrders);
+router.route('/create-checkout-session').post(protect, createOrderWithStripe);
 
 export default router;
