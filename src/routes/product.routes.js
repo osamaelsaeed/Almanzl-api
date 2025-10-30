@@ -7,15 +7,16 @@ import {
     searchForProduct,
     updateProduct,
 } from '../controllers/product.controller.js';
+import { upload } from '../middlewares/upload.js';
 const router = express.Router();
 
 router.route('/')
     .get(getAllProducts)
-    .post(addProduct);
+    .post(upload.array('images', 8), addProduct);
 
 router.route('/:id')
     .get(getProduct)
-    .patch(updateProduct)
+    .patch(upload.array('images', 8), updateProduct)
     .delete(deleteProduct);
 
 router.route('/search/:query')
