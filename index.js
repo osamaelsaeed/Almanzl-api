@@ -14,6 +14,7 @@ import categoryRouter from './src/routes/category.routes.js';
 import stripeWebhookRoute from './src/routes/stripeWebhookRoute.js';
 import globalErrorHandler from './src/utils/globalErrorHandler.js';
 import AppError from './src/utils/AppError.js';
+import statisticsRoutes from './src/routes/statistics.routes.js';
 
 const app = express();
 // keep this route here before express.json Stripe requires the raw body to verify the signature.
@@ -33,6 +34,7 @@ app.use('/api/products', productRouter);
 app.use('/api/auth', userRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/categories', categoryRouter);
+app.use('/api/statistics', statisticsRoutes);
 
 app.all('*all', (req, res, next) =>
     next(new AppError(`Can't find ${req.originalUrl} on this server`, 404))
