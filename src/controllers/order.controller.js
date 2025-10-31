@@ -63,3 +63,161 @@ export const createOrderWithStripe = asyncHandler(async (req, res) => {
         orderId: order._id,
     });
 });
+
+// @desc   Get all orders paginated (Admin view, paginated)
+// @route  GET /api/orders-paginated
+// @access Private/Admin
+export const getAllOrdersPaginated = asyncHandler(async (req, res) => {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const totalOrders = await Order.countDocuments();
+    const orders = await Order.find()
+        .populate('userId', 'name email')
+        .populate('orderItems.product', 'name price')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+    res.status(200).json({
+        success: true,
+        message: 'Orders fetched successfully',
+        page,
+        totalPages: Math.ceil(totalOrders / limit),
+        totalOrders,
+        data: orders,
+    });
+});
+
+// @desc   Get specific order by ID
+// @route  GET /api/orders/:id
+// @access Private (Admin or Order Owner)
+export const getOrderById = asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id)
+        .populate('userId', 'name email phone')
+        .populate('orderItems.product', 'name price images');
+
+    if (!order) {
+        return res.status(404).json({
+            success: false,
+            message: 'Order not found',
+        });
+    }
+
+    // if (req.user.role !== 'admin' && order.userId.toString() !== req.user._id.toString()) {
+    //   return res.status(403).json({
+    //     success: false,
+    //     message: "Not authorized to access this order",
+    //   });
+    // }
+
+    res.status(200).json({
+        success: SUCCESS,
+        message: 'Order details fetched successfully',
+        data: order,
+    });
+});
+
+// @desc   Create a new order
+// @route  POST /api/orders
+// @access Private (Logged-in users)
+export const createOrder = asyncHandler(async (req, res) => {
+    const {
+        orderItems,
+        shippingAddress,
+        paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        discountAmount,
+        totalPrice,
+    } = req.body;
+
+    if (!orderItems || orderItems.length === 0) {
+        return res.status(400).json({
+            success: false,
+            message: 'No order items provided',
+        });
+    }
+
+    if (!shippingAddress || !shippingAddress.address) {
+        return res.status(400).json({
+            success: false,
+            message: 'Shipping address is required',
+        });
+    }
+
+    if (!paymentMethod) {
+        return res.status(400).json({
+            success: false,
+            message: 'Payment method is required',
+        });
+    }
+
+    // Create new order
+    const order = await Order.create({
+        userId: req.user._id,
+        orderItems,
+        shippingAddress,
+        payementMethod: paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        discountAmount: discountAmount || 0,
+        totalPrice,
+    });
+
+    res.status(201).json({
+        success: true,
+        message: 'Order created successfully',
+        data: order,
+    });
+});
+
+// @desc   Update order status (pending, confirmed, cancelled)
+// @route  PUT /api/orders/:id/status
+// @access Private/Admin
+export const updateOrderStatus = asyncHandler(async (req, res) => {
+    const { status } = req.body;
+    const validStatuses = ['pending', 'confirmed', 'cancelled'];
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid status. Allowed values: pending, confirmed, cancelled',
+        });
+    }
+
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+        return res.status(404).json({
+            success: false,
+            message: 'Order not found',
+        });
+    }
+
+    order.status = status;
+    const updatedOrder = await order.save();
+
+    res.status(200).json({
+        success: true,
+        message: `Order status updated to '${status}'`,
+        data: updatedOrder,
+    });
+});
+
+// @desc    Delete order (admin only)
+// @route   DELETE /api/orders/:id
+// @access  Admin
+export const deleteOrder = asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+        throw new AppError('Order not found', 404);
+    }
+
+    await order.deleteOne();
+
+    res.status(200).json({
+        success: SUCCESS,
+        message: 'Order deleted successfully',
+    });
+});
