@@ -154,7 +154,6 @@ export const createOrder = asyncHandler(async (req, res) => {
         });
     }
 
-    // Create new order
     const order = await Order.create({
         userId: req.user._id,
         orderItems,
