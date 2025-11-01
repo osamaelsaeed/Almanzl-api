@@ -18,6 +18,4 @@ router.post('/login', login);
 router.route('/get-all-users').get(getAllUsers);
 router.route('/:id').delete(deleteUser).get(getUserProfile);
 
-router.use(protect);
-
 export default router;

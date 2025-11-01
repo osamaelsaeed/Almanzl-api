@@ -27,13 +27,13 @@ const productSchema = new mongoose.Schema(
             {
                 public_id: {
                     type: String,
-                    required: true
+                    required: true,
                 },
                 url: {
                     type: String,
-                    required: true
-                }
-            }
+                    required: true,
+                },
+            },
         ],
         stock: {
             type: Number,
@@ -41,11 +41,20 @@ const productSchema = new mongoose.Schema(
             min: [0, 'Stock cannot be negative'],
             default: 0,
         },
+        category: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Category',
+            required: [true, 'Product category is required!'],
+        },
     },
     {
         timestamps: true,
     }
 );
+productSchema.pre(/^find/, function (next) {
+    this.populate({ path: 'category', select: 'name' });
+    next();
+});
 
 const Product = mongoose.model('Product', productSchema);
 

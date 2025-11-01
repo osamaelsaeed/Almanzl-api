@@ -1,7 +1,8 @@
 import Category from '../models/category.model.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { SUCCESS, ERROR } from '../utils/reposnseStatus.js';
-
+import { v2 as cloudinaryV2 } from 'cloudinary';
+import AppError from '../utils/AppError.js';
 // @desc   Get all categories
 // @route  GET /api/categories
 // @access Public
@@ -37,27 +38,37 @@ export const getCategoryById = asyncHandler(async (req, res) => {
 // @desc   Create a new category
 // @route  POST /api/categories
 // @access Private/Admin
-export const createCategory = asyncHandler(async (req, res) => {
-    const { name, description, icon } = req.body;
-    if (!name) {
-        return res.status(400).json({
-            success: ERROR,
-            message: 'Category name is required',
-        });
-    }
+export const createCategory = asyncHandler(async (req, res, next) => {
+    const { name, description } = req.body;
 
+    if (!name) {
+        return next(new AppError('Category name is required', 400));
+    }
     const existingCategory = await Category.findOne({ name });
     if (existingCategory) {
-        return res.status(400).json({
-            success: ERROR,
-            message: 'Category already exists',
+        return next(new AppError('Category already exists', 400));
+    }
+
+    let iconData = null;
+
+    if (req.file) {
+        const result = await cloudinaryV2.uploader.upload(req.file.path, {
+            folder: 'categories/icons',
+            transformation: [{ width: 200, height: 200, crop: 'fill' }],
         });
+
+        iconData = {
+            url: result.secure_url,
+            public_id: result.public_id,
+        };
+    } else {
+        return next(new AppError('Category icon is required', 400));
     }
 
     const category = await Category.create({
         name,
         description,
-        icon,
+        icon: iconData,
     });
 
     res.status(201).json({
