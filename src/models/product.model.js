@@ -23,14 +23,18 @@ const productSchema = new mongoose.Schema(
             min: [0, 'Product price must be a +ve number'],
             max: [1_000_000, 'Product price is so high'],
         },
-        image: {
-            type: String,
-            // required: [true, 'Product image is required!']
-            validate: {
-                validator: (v) => /^https?:\/\/.+\.(jpg|jpeg|png)$/i.test(v),
-                message: 'invalid image url format',
-            },
-        },
+        images: [
+            {
+                public_id: {
+                    type: String,
+                    required: true
+                },
+                url: {
+                    type: String,
+                    required: true
+                }
+            }
+        ],
         stock: {
             type: Number,
             required: [true, 'Product stock is required!'],

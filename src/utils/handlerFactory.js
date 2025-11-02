@@ -2,6 +2,7 @@ import ApiFeatures from './apiFeatures.js';
 import AppError from './AppError.js';
 import asyncHandler from 'express-async-handler';
 import { SUCCESS } from './reposnseStatus.js';
+import cloudinaryV2 from './cloudinary.js';
 
 const getModelNameInLowerCase = (Model) => Model.modelName.toLowerCase();
 
@@ -17,7 +18,36 @@ export const deleteOne = (Model) =>
 
 export const updateOne = (Model) =>
     asyncHandler(async (req, res, next) => {
-        const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+        const body = {
+            ...req.body
+        };
+
+        if (req.files && req.files.length > 0) {
+            let updatedImages = [];
+            const images = [];
+            await Promise.all(
+                req.files.map(async (file) => {
+                    const result = await cloudinaryV2.uploader.upload(file.path, {
+                        folder: Model.modelName
+                    });
+
+                    images.push({
+                        url: result.secure_url,
+                        public_id: result.public_id
+                    });
+                })
+            ).then(async () => {
+                const item = await Model.findById(req.params.id);
+                if (!item) {
+                    return next(new AppError(`No ${Model.modelName} found with that ID`, 404));
+                }
+
+                updatedImages = [...item.images, ...images];
+                body.images = updatedImages;
+            });
+        }
+
+        const doc = await Model.findByIdAndUpdate(req.params.id, body, {
             new: true,
             runValidators: true,
         });
@@ -31,10 +61,35 @@ export const updateOne = (Model) =>
 
 export const createOne = (Model) =>
     asyncHandler(async (req, res, next) => {
-        const doc = await Model.create(req.body);
+
+        if (!req.files || req.files.length === 0) {
+            const err = new AppError('Each product must have at least one photo', 400);
+            return next(err);
+        }
+
+        const images = [];
+        await Promise.all(
+            req.files.map(async (file) => {
+                const result = await cloudinaryV2.uploader.upload(file.path, {
+                    folder: Model.modelName
+                });
+                images.push({
+                    url: result.secure_url,
+                    public_id: result.public_id
+                });
+            })
+        );
+
+        const body = {
+            ...req.body,
+            images
+        };
+
+        const doc = await Model.create(body);
         res.status(201).json({
             status: SUCCESS,
             data: doc,
+            images
         });
     });
 

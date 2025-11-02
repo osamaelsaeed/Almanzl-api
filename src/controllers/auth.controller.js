@@ -2,8 +2,8 @@ import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import AppError from '../utils/AppError.js';
-import catchAsync from '../utils/catchAsync.js';
 import { sendEmail } from '../utils/email.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
 
 const signToken = (id) =>
     jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -17,7 +17,7 @@ const sendUserWithToken = (user, statusCode, req, res) => {
 };
 
 // Signup controller
-export const signup = catchAsync(async (req, res, next) => {
+export const signup = asyncHandler(async (req, res, next) => {
     const user = await User.create({
         name: req.body.name,
         phone: req.body.phone,
@@ -29,7 +29,7 @@ export const signup = catchAsync(async (req, res, next) => {
 });
 
 // Login controller
-export const login = catchAsync(async (req, res, next) => {
+export const login = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
     if (!email || !password) {
         return next(new AppError('You should provide bothe email and password', 400));
@@ -44,7 +44,7 @@ export const login = catchAsync(async (req, res, next) => {
 
 //forget password controller
 
-export const forgotPassword = catchAsync(async (req, res, next) => {
+export const forgotPassword = asyncHandler(async (req, res, next) => {
     const { email } = req.body;
     if (!email) return next(new AppError('Please provide your email', 400));
 
@@ -89,7 +89,7 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
 });
 
 //restpassword controller
-export const resetPassword = catchAsync(async (req, res, next) => {
+export const resetPassword = asyncHandler(async (req, res, next) => {
     const { token } = req.params;
     const { password } = req.body;
 
