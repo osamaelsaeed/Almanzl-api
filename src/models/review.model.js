@@ -19,7 +19,7 @@ const reviewSchema = new Schema(
             required: [true, 'Review must have a review'],
         },
         product: {
-            type: mongoose.Schema.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             required: [true, 'Review must belong to a Product.'],
         },
         user: {
@@ -69,8 +69,10 @@ reviewSchema.statics.calcAverageRatings = async function (productId) {
     }
 };
 
-reviewSchema.post('save', function () {
-    this.constructor.calcAverageRatings(this.product);
+reviewSchema.post('save', async function (doc, next) {
+    await doc.populate({ path: 'user', select: 'name photo' });
+    await doc.constructor.calcAverageRatings(doc.product);
+    next();
 });
 
 reviewSchema.post(/^findOneAnd/, async function (doc) {
