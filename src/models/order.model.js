@@ -7,7 +7,7 @@ const orderSchema = new mongoose.Schema(
             ref: 'User',
             required: true,
         },
-        payementMethod: {
+        paymentMethod: {
             type: String,
             required: true,
             enum: ['cash', 'stripe'],
@@ -63,6 +63,18 @@ orderSchema.pre('save', function (next) {
         const subtotal = this.itemsPrice + this.shippingPrice;
         this.totalPrice = Math.max(subtotal - this.discountAmount, 0);
     }
+    next();
+});
+
+orderSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'orderItems.product',
+        select: 'name price images category',
+    }).populate({
+        path: 'userId',
+        select: 'name email',
+    });
+
     next();
 });
 
