@@ -19,50 +19,23 @@ export const getSimilarProducts = asyncHandler(async (req, res, next) => {
 
     const product = await Product.findById(id);
     if (!product) {
-        return res.status(404).json({ status: FAIL, message: 'Product not found' });
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Product not found',
+        });
     }
 
     const similarProducts = await Product.find({
         category: product.category,
         _id: { $ne: id },
-    }).limit(8);
+    })
+        .limit(8)
+        .populate('category', 'name');
 
     res.status(200).json({
         status: SUCCESS,
+        message: 'Similar products fetched successfully',
         results: similarProducts.length,
         data: similarProducts,
-    });
-});
-
-export const searchForProduct = asyncHandler(async (req, res, next) => {
-    const { query } = req.params;
-
-    const features = new ApiFeatures(
-        Product.find({
-            $or: [
-                {
-                    name: {
-                        $regex: query,
-                        $options: 'i',
-                    },
-                },
-            ],
-        }),
-        req.query
-    )
-        .filter()
-        .sort()
-        .limitFields()
-        .paginate();
-
-    const finalResult = await features.query;
-
-    res.status(200).json({
-        status: SUCCESS,
-        msg: 'Search for product result',
-        results: finalResult.length,
-        data: {
-            finalResult,
-        },
     });
 });
