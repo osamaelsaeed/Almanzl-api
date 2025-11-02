@@ -1,5 +1,5 @@
 import Ajv from 'ajv';
-import AppError from '../utils/appError.js';
+import AppError from '../utils/AppError.js';
 import addFormats from 'ajv-formats';
 
 const ajv = new Ajv();
