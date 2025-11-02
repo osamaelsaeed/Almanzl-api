@@ -4,22 +4,23 @@ import {
     deleteProduct,
     getAllProducts,
     getProduct,
+    getSimilarProducts,
     searchForProduct,
     updateProduct,
 } from '../controllers/product.controller.js';
 import { upload } from '../middlewares/upload.js';
 const router = express.Router();
 
-router.route('/')
-    .get(getAllProducts)
-    .post(upload.array('images', 8), addProduct);
+router.route('/').get(getAllProducts).post(upload.array('images', 8), addProduct);
 
-router.route('/:id')
+router
+    .route('/:id')
     .get(getProduct)
     .patch(upload.array('images', 8), updateProduct)
     .delete(deleteProduct);
 
-router.route('/search/:query')
-    .get(searchForProduct);
+router.get('/:id/similar', getSimilarProducts);
+
+router.route('/search/:query').get(searchForProduct);
 
 export default router;
