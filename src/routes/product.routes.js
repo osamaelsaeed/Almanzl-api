@@ -4,7 +4,7 @@ import {
     deleteProduct,
     getAllProducts,
     getProduct,
-    searchForProduct,
+    getSimilarProducts,
     updateProduct,
 } from '../controllers/product.controller.js';
 import { upload } from '../middlewares/upload.js';
@@ -22,6 +22,6 @@ router
     .patch(upload.array('images', 8), updateProduct)
     .delete(deleteProduct);
 
-router.route('/search/:query').get(searchForProduct);
+router.get('/:id/similar', getSimilarProducts);
 
 export default router;
