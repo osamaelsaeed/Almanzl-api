@@ -2,7 +2,6 @@ import asyncHandler from 'express-async-handler';
 import Product from '../models/product.model.js';
 import * as Factory from '../utils/handlerFactory.js';
 import { FAIL, SUCCESS } from '../utils/reposnseStatus.js';
-import ApiFeatures from '../utils/apiFeatures.js';
 
 export const getAllProducts = Factory.getAll(Product);
 
@@ -20,7 +19,7 @@ export const getSimilarProducts = asyncHandler(async (req, res, next) => {
     const product = await Product.findById(id);
     if (!product) {
         return res.status(404).json({
-            status: 'fail',
+            status: FAIL,
             message: 'Product not found',
         });
     }
