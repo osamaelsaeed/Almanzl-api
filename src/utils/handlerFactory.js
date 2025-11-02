@@ -19,7 +19,7 @@ export const deleteOne = (Model) =>
 export const updateOne = (Model) =>
     asyncHandler(async (req, res, next) => {
         const body = {
-            ...req.body
+            ...req.body,
         };
 
         if (req.files && req.files.length > 0) {
@@ -28,12 +28,12 @@ export const updateOne = (Model) =>
             await Promise.all(
                 req.files.map(async (file) => {
                     const result = await cloudinaryV2.uploader.upload(file.path, {
-                        folder: Model.modelName
+                        folder: Model.modelName,
                     });
 
                     images.push({
                         url: result.secure_url,
-                        public_id: result.public_id
+                        public_id: result.public_id,
                     });
                 })
             ).then(async () => {
@@ -59,38 +59,44 @@ export const updateOne = (Model) =>
         res.status(200).json({ status: SUCCESS, data: doc });
     });
 
-export const createOne = (Model) =>
+export const createOne = (Model, hasImages = false) =>
     asyncHandler(async (req, res, next) => {
+        let body = { ...req.body };
+        const images = [];
+        if (hasImages) {
+            if (!req.files || req.files.length === 0) {
+                const err = new AppError('Each product must have at least one photo', 400);
+                return next(err);
+            }
 
-        if (!req.files || req.files.length === 0) {
-            const err = new AppError('Each product must have at least one photo', 400);
-            return next(err);
+            await Promise.all(
+                req.files.map(async (file) => {
+                    const result = await cloudinaryV2.uploader.upload(file.path, {
+                        folder: Model.modelName,
+                    });
+                    images.push({
+                        url: result.secure_url,
+                        public_id: result.public_id,
+                    });
+                })
+            );
+
+            body = {
+                ...body,
+                images,
+            };
         }
 
-        const images = [];
-        await Promise.all(
-            req.files.map(async (file) => {
-                const result = await cloudinaryV2.uploader.upload(file.path, {
-                    folder: Model.modelName
-                });
-                images.push({
-                    url: result.secure_url,
-                    public_id: result.public_id
-                });
-            })
-        );
-
-        const body = {
-            ...req.body,
-            images
-        };
-
         const doc = await Model.create(body);
-        res.status(201).json({
+        const responseData = {
             status: SUCCESS,
             data: doc,
-            images
-        });
+        };
+
+        if (images && images.length > 0) {
+            responseData.images = images;
+        }
+        res.status(201).json(responseData);
     });
 
 export const getOne = (Model, populateOptions) =>
