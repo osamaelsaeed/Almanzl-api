@@ -1,10 +1,10 @@
 import express from 'express';
 import * as reviewController from '../controllers/review.controller.js';
-import * as authController from '../controllers/auth.controller.js';
+import { protect } from '../middlewares/protect.middleware.js';
 
 const router = express.Router({ mergeParams: true });
 
-router.use(authController.protect);
+router.use(protect);
 
 router
     .route('/')
