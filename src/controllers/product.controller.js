@@ -1,17 +1,17 @@
 import asyncHandler from 'express-async-handler';
 import Product from '../models/product.model.js';
-import * as Factory from '../utils/handlerFactory.js';
+import * as factory from '../utils/handlerFactory.js';
 import { FAIL, SUCCESS } from '../utils/reposnseStatus.js';
 
-export const getAllProducts = Factory.getAll(Product);
+export const getAllProducts = factory.getAll(Product);
 
-export const getProduct = Factory.getOne(Product);
+export const getProduct = factory.getOne(Product);
 
-export const addProduct = Factory.createOne(Product, true);
+export const addProduct = factory.createOneWithImages(Product);
 
-export const updateProduct = Factory.updateOne(Product);
+export const updateProduct = factory.updateOne(Product);
 
-export const deleteProduct = Factory.deleteOne(Product);
+export const deleteProduct = factory.deleteOne(Product);
 
 export const getSimilarProducts = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
