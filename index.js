@@ -7,13 +7,14 @@ import cors from 'cors';
 
 initDB();
 
+import AppError from './src/utils/AppError.js';
 import productRouter from './src/routes/product.routes.js';
 import userRouter from './src/routes/user.routes.js';
 import orderRouter from './src/routes/order.routes.js';
 import categoryRouter from './src/routes/category.routes.js';
 import stripeWebhookRoute from './src/routes/stripeWebhookRoute.js';
 import globalErrorHandler from './src/utils/globalErrorHandler.js';
-import AppError from './src/utils/AppError.js';
+import cartRoutes from './src/routes/cart.routes.js';
 import statisticsRoutes from './src/routes/statistics.routes.js';
 
 const app = express();
@@ -34,6 +35,7 @@ app.use('/api/products', productRouter);
 app.use('/api/auth', userRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/categories', categoryRouter);
+app.use('/api/cart', cartRoutes);
 app.use('/api/statistics', statisticsRoutes);
 
 app.all('*all', (req, res, next) =>

@@ -30,7 +30,21 @@ const userSchema = new Schema(
             match: checkPassword,
             select: false,
         },
-
+        address: {
+            type: String,
+        },
+        city: { type: String },
+        postalCode: { type: String },
+        country: { type: String },
+        cart: [
+            {
+                productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+                name: String,
+                price: Number,
+                image: String,
+                quantity: Number,
+            },
+        ],
         passwordResetToken: String,
         passwordResetExpires: Date,
 

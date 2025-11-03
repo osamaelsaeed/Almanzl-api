@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "type": "module",
     "scripts": {
         "dev": "cross-env NODE_ENV=development nodemon index.js",
         "format": "prettier --write .",
