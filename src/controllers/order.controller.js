@@ -220,3 +220,36 @@ export const deleteOrder = asyncHandler(async (req, res) => {
         message: 'Order deleted successfully',
     });
 });
+
+// @desc   Mark an order as paid (Admin only)
+// @route  PUT /api/orders/:id/pay
+// @access Private/Admin
+export const updateOrderPaidStatus = asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+        return res.status(404).json({
+            success: false,
+            message: 'Order not found',
+        });
+    }
+
+    // Mark as paid only if not already
+    if (order.isPaid) {
+        return res.status(400).json({
+            success: false,
+            message: 'Order is already marked as paid',
+        });
+    }
+
+    order.isPaid = true;
+    order.paidAt = new Date();
+
+    const updatedOrder = await order.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'Order marked as paid successfully',
+        data: updatedOrder,
+    });
+});
