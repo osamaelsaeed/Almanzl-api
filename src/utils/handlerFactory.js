@@ -59,44 +59,46 @@ export const updateOne = (Model) =>
         res.status(200).json({ status: SUCCESS, data: doc });
     });
 
-export const createOne = (Model, hasImages = false) =>
+export const createOneWithImages = (Model) =>
     asyncHandler(async (req, res, next) => {
-        let body = { ...req.body };
         const images = [];
-        if (hasImages) {
-            if (!req.files || req.files.length === 0) {
-                const err = new AppError('Each product must have at least one photo', 400);
-                return next(err);
-            }
-
-            await Promise.all(
-                req.files.map(async (file) => {
-                    const result = await cloudinaryV2.uploader.upload(file.path, {
-                        folder: Model.modelName,
-                    });
-                    images.push({
-                        url: result.secure_url,
-                        public_id: result.public_id,
-                    });
-                })
-            );
-
-            body = {
-                ...body,
-                images,
-            };
+        if (!req.files || req.files.length === 0) {
+            const err = new AppError('Each product must have at least one photo', 400);
+            return next(err);
         }
+
+        await Promise.all(
+            req.files.map(async (file) => {
+                const result = await cloudinaryV2.uploader.upload(file.path, {
+                    folder: Model.modelName,
+                });
+                images.push({
+                    url: result.secure_url,
+                    public_id: result.public_id,
+                });
+            })
+        );
+
+        const body = { ...req.body, images };
+        console.log(`This is the body ${body}`);
 
         const doc = await Model.create(body);
-        const responseData = {
+
+        res.status(201).json({
             status: SUCCESS,
             data: doc,
-        };
+            images: images,
+        });
+    });
 
-        if (images && images.length > 0) {
-            responseData.images = images;
-        }
-        res.status(201).json(responseData);
+export const createOne = (Model) =>
+    asyncHandler(async (req, res, next) => {
+        const doc = await Model.create(req.body);
+        res.status(201).json({
+            status: 'success',
+            status: SUCCESS,
+            data: doc,
+        });
     });
 
 export const getOne = (Model, populateOptions) =>
