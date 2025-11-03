@@ -23,18 +23,38 @@ const productSchema = new mongoose.Schema(
             min: [0, 'Product price must be a +ve number'],
             max: [1_000_000, 'Product price is so high'],
         },
-        image: {
-            type: String,
-            // required: [true, 'Product image is required!']
-            validate: {
-                validator: (v) => /^https?:\/\/.+\.(jpg|jpeg|png)$/i.test(v),
-                message: 'invalid image url format',
+        images: [
+            {
+                public_id: {
+                    type: String,
+                    required: true,
+                },
+                url: {
+                    type: String,
+                    required: true,
+                },
             },
-        },
+        ],
         stock: {
             type: Number,
             required: [true, 'Product stock is required!'],
             min: [0, 'Stock cannot be negative'],
+            default: 0,
+        },
+        category: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Category',
+            required: [true, 'Product category is required!'],
+        },
+        ratingsAverage: {
+            type: Number,
+            default: 4.5,
+            min: [1, "Rating can't be less than 1.0"],
+            max: [5, "Rating can't be more than 5.0"],
+            set: (val) => Math.round(val * 10) / 10,
+        },
+        ratingsQuantity: {
+            type: Number,
             default: 0,
         },
     },
@@ -42,6 +62,10 @@ const productSchema = new mongoose.Schema(
         timestamps: true,
     }
 );
+productSchema.pre(/^find/, function (next) {
+    this.populate({ path: 'category', select: 'name' });
+    next();
+});
 
 const Product = mongoose.model('Product', productSchema);
 
