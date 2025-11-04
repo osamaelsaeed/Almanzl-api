@@ -17,10 +17,7 @@ export const getAllOrders = asyncHandler(async (req, res) => {
 });
 export const createOrderWithStripe = asyncHandler(async (req, res) => {
     const userId = req.id;
-    const { shippingAddress, itemsPrice, shippingPrice, discountAmount } = req.body;
-    const { cart } = await User.findById(userId).select('cart');
-    const orderItems = cart;
-    console.log(cart);
+    const { orderItems, shippingAddress, itemsPrice, shippingPrice, discountAmount } = req.body;
     if (!orderItems || orderItems.length === 0) {
         throw new AppError('No order items provided', 400);
     }
@@ -79,9 +76,7 @@ export const createOrderWithStripe = asyncHandler(async (req, res) => {
 
 export const createOrderWithCash = asyncHandler(async (req, res) => {
     const userId = req.id;
-    const { shippingAddress, itemsPrice, shippingPrice, discountAmount } = req.body;
-    const { cart } = await User.findById(userId).select('cart');
-    const orderItems = cart;
+    const { orderItems, shippingAddress, itemsPrice, shippingPrice, discountAmount } = req.body;
     if (!orderItems || orderItems.length === 0) {
         throw new AppError('No order items provided', 400);
     }
