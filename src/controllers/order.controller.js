@@ -54,8 +54,11 @@ export const createOrderWithStripe = asyncHandler(async (req, res) => {
     const order = await Order.create({
         userId,
         orderItems: orderItems.map((item) => ({
-            product: item.productId,
+            productId: item.productId,
             quantity: item.quantity,
+            name: item.name,
+            price: item.price,
+            image: item.image,
         })),
         shippingAddress,
         itemsPrice,
@@ -87,8 +90,11 @@ export const createOrderWithCash = asyncHandler(async (req, res) => {
     const order = await Order.create({
         userId,
         orderItems: orderItems.map((item) => ({
-            product: item.productId,
+            productId: item.productId,
             quantity: item.quantity,
+            name: item.name,
+            price: item.price,
+            image: item.image,
         })),
         shippingAddress,
         itemsPrice,
@@ -146,7 +152,7 @@ export const getAllOrdersPaginated = asyncHandler(async (req, res) => {
 export const getOrderById = asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id)
         .populate('userId', 'name email phone')
-        .populate('orderItems.product', 'name price images');
+        .populate('orderItems.productId', 'name price images');
 
     if (!order) {
         return res.status(404).json({

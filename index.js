@@ -20,7 +20,7 @@ import statisticsRoutes from './src/routes/statistics.routes.js';
 const app = express();
 // keep this route here before express.json Stripe requires the raw body to verify the signature.
 
-app.use('/api/orders', stripeWebhookRoute);
+app.use('/api/stripe', stripeWebhookRoute);
 
 app.set('query parser', 'extended');
 app.use(express.json());
