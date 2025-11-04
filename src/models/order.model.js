@@ -61,7 +61,7 @@ orderSchema.pre('save', function (next) {
 
 orderSchema.pre(/^find/, function (next) {
     this.populate({
-        path: 'orderItems.product',
+        path: 'orderItems.productId',
         select: 'name price images category',
     }).populate({
         path: 'userId',

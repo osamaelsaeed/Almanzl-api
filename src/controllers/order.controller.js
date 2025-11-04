@@ -125,7 +125,7 @@ export const getAllOrdersPaginated = asyncHandler(async (req, res) => {
     const totalOrders = await Order.countDocuments();
     const orders = await Order.find()
         .populate('userId', 'name email')
-        .populate('orderItems.product', 'name price')
+        .populate('orderItems.productId', 'name price')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit);
