@@ -32,7 +32,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                 });
             }
         }
-        if (event.type === 'checkout.session.expired') {
+        if (event.type === 'payment_intent.payment_failed') {
             const session = event.data.object;
             const orderId = session.metadata?.orderId;
 
