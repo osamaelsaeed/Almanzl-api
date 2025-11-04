@@ -7,14 +7,15 @@ import {
     getSalesByGovernorate,
     getOrderStatusCounts,
 } from '../controllers/statistics.controller.js';
+import { protect } from '../middlewares/protect.middleware.js';
 
 const router = express.Router();
 
-router.get('/overview', getOverview);
-router.get('/sales-performance', getSalesPerformance);
-router.get('/top-products', getTopProducts);
-router.get('/sales-by-category', getSalesByCategory);
-router.get('/sales-by-governorate', getSalesByGovernorate);
-router.get('/orders-status', getOrderStatusCounts);
+router.get('/overview', protect, getOverview);
+router.get('/sales-performance', protect, getSalesPerformance);
+router.get('/top-products', protect, getTopProducts);
+router.get('/sales-by-category', protect, getSalesByCategory);
+router.get('/sales-by-governorate', protect, getSalesByGovernorate);
+router.get('/orders-status', protect, getOrderStatusCounts);
 
 export default router;
