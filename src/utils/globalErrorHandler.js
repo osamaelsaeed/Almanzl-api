@@ -7,11 +7,11 @@ const handleCastErrorDB = (err) => {
 };
 
 const handleDuplicatedFieldDB = (err) => {
-  const field = Object.keys(err.keyValue)[0];
-  const value = Object.values(err.keyValue)[0];
-  const message = `Duplicated field: ${field} with value: ${value}. Please use another value!`;
+    const field = Object.keys(err.keyValue)[0];
+    const value = Object.values(err.keyValue)[0];
+    const message = `Duplicated field: ${field} with value: ${value}. Please use another value!`;
 
-  return new AppError(message, 400);
+    return new AppError(message, 400);
 };
 
 const handleValidationErrorDB = (err) => {
@@ -59,7 +59,7 @@ const handleJWTExpiredError = () =>
 export default (err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || ERROR;
-
+    console.log(err);
     if (process.env.NODE_ENV === 'development') {
         sendErrorDev(err, res);
     } else if (process.env.NODE_ENV === 'production') {

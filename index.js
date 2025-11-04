@@ -7,19 +7,20 @@ import cors from 'cors';
 
 initDB();
 
+import AppError from './src/utils/AppError.js';
 import productRouter from './src/routes/product.routes.js';
-import userRouter from './src/routes/user.routes.js';
+import authRoutes from './src/routes/auth.routes.js';
 import orderRouter from './src/routes/order.routes.js';
 import categoryRouter from './src/routes/category.routes.js';
 import stripeWebhookRoute from './src/routes/stripeWebhookRoute.js';
 import globalErrorHandler from './src/utils/globalErrorHandler.js';
-import AppError from './src/utils/AppError.js';
+import cartRoutes from './src/routes/cart.routes.js';
 import statisticsRoutes from './src/routes/statistics.routes.js';
 
 const app = express();
 // keep this route here before express.json Stripe requires the raw body to verify the signature.
 
-app.use('/api/orders', stripeWebhookRoute);
+app.use('/api/stripe', stripeWebhookRoute);
 
 app.set('query parser', 'extended');
 app.use(express.json());
@@ -31,9 +32,10 @@ if (NODE_ENV === 'development') {
 }
 
 app.use('/api/products', productRouter);
-app.use('/api/auth', userRouter);
+app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRouter);
 app.use('/api/categories', categoryRouter);
+app.use('/api/cart', cartRoutes);
 app.use('/api/statistics', statisticsRoutes);
 
 app.all('*all', (req, res, next) =>

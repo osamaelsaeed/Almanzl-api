@@ -15,25 +15,18 @@ const orderSchema = new mongoose.Schema(
         },
         orderItems: [
             {
-                product: {
-                    type: mongoose.Schema.ObjectId,
-                    ref: 'Product',
-                    required: true,
-                },
-                quantity: {
-                    type: Number,
-                    required: true,
-                    default: 1,
-                },
+                productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+                name: String,
+                price: Number,
+                image: String,
+                quantity: Number,
             },
         ],
         shippingAddress: {
-            fullName: { type: String, required: true },
             address: { type: String, required: true },
             city: { type: String, required: true },
             postalCode: { type: String },
             country: { type: String, required: true },
-            phoneNumber: { type: String, required: true },
         },
         itemsPrice: { type: Number, required: true },
         shippingPrice: { type: Number, required: true },

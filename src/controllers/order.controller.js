@@ -25,16 +25,28 @@ export const createOrderWithStripe = asyncHandler(async (req, res) => {
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         mode: 'payment',
-        line_items: orderItems.map((item) => ({
-            price_data: {
-                currency: 'usd',
-                product_data: {
-                    name: item.name,
+        line_items: [
+            ...orderItems.map((item) => ({
+                price_data: {
+                    currency: 'usd',
+                    product_data: {
+                        name: item.name,
+                    },
+                    unit_amount: Math.round(item.price * 100),
                 },
-                unit_amount: Math.round(item.price * 100),
+                quantity: item.quantity,
+            })),
+            {
+                price_data: {
+                    currency: 'usd',
+                    product_data: {
+                        name: 'Shipping',
+                    },
+                    unit_amount: Math.round(shippingPrice * 100),
+                },
+                quantity: 1,
             },
-            quantity: item.quantity,
-        })),
+        ],
         success_url: `${CLIENT_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${CLIENT_URL}/payment-cancel`,
     });
@@ -42,8 +54,11 @@ export const createOrderWithStripe = asyncHandler(async (req, res) => {
     const order = await Order.create({
         userId,
         orderItems: orderItems.map((item) => ({
-            product: item.productId,
+            productId: item.productId,
             quantity: item.quantity,
+            name: item.name,
+            price: item.price,
+            image: item.image,
         })),
         shippingAddress,
         itemsPrice,
@@ -55,7 +70,7 @@ export const createOrderWithStripe = asyncHandler(async (req, res) => {
         status: 'pending',
     });
     await stripe.checkout.sessions.update(session.id, {
-        metadata: { orderId: order._id.toString(), userId },
+        metadata: { orderId: order._id.toString(), userId: String(userId) },
     });
     res.status(201).json({
         success: true,
@@ -64,6 +79,47 @@ export const createOrderWithStripe = asyncHandler(async (req, res) => {
     });
 });
 
+export const createOrderWithCash = asyncHandler(async (req, res) => {
+    const userId = req.id;
+    const { orderItems, shippingAddress, itemsPrice, shippingPrice, discountAmount } = req.body;
+    if (!orderItems || orderItems.length === 0) {
+        throw new AppError('No order items provided', 400);
+    }
+    const totalPrice = Math.max(itemsPrice + shippingPrice - (discountAmount || 0), 0);
+
+    const order = await Order.create({
+        userId,
+        orderItems: orderItems.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            name: item.name,
+            price: item.price,
+            image: item.image,
+        })),
+        shippingAddress,
+        itemsPrice,
+        shippingPrice,
+        discountAmount,
+        totalPrice,
+        payementMethod: 'cash',
+        isPaid: true,
+        status: 'confirmed',
+    });
+
+    res.status(201).json({
+        success: true,
+        orderId: order._id,
+    });
+});
+
+export const retriveStripeSession = asyncHandler(async (req, res) => {
+    try {
+        const session = await stripe.checkout.sessions.retrieve(req.params.id);
+        res.status(200).json({ status: SUCCESS, message: 'session retrieved', data: session });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
 // @desc   Get all orders paginated (Admin view, paginated)
 // @route  GET /api/orders-paginated
 // @access Private/Admin
@@ -75,7 +131,7 @@ export const getAllOrdersPaginated = asyncHandler(async (req, res) => {
     const totalOrders = await Order.countDocuments();
     const orders = await Order.find()
         .populate('userId', 'name email')
-        .populate('orderItems.product', 'name price')
+        .populate('orderItems.productId', 'name price')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit);
@@ -96,7 +152,7 @@ export const getAllOrdersPaginated = asyncHandler(async (req, res) => {
 export const getOrderById = asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id)
         .populate('userId', 'name email phone')
-        .populate('orderItems.product', 'name price images');
+        .populate('orderItems.productId', 'name price images');
 
     if (!order) {
         return res.status(404).json({
