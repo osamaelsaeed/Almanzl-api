@@ -1,6 +1,7 @@
 import express from 'express';
 import stripe from '../config/stripe.js';
 import Order from '../models/order.model.js';
+import User from '../models/user.model.js';
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
             const session = event.data.object;
 
             const orderId = session.metadata?.orderId;
+            const userId = session.metadata?.userId;
 
             if (orderId) {
                 await Order.findByIdAndUpdate(orderId, {
@@ -25,7 +27,9 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                     paidAt: new Date(),
                     status: 'confirmed',
                 });
-                console.log(`Order ${orderId} marked as paid.`);
+                await User.findByIdAndUpdate(userId, {
+                    cart: [],
+                });
             }
         }
 
