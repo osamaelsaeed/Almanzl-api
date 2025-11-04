@@ -9,7 +9,8 @@ initDB();
 
 import AppError from './src/utils/AppError.js';
 import productRouter from './src/routes/product.routes.js';
-import userRouter from './src/routes/user.routes.js';
+import authRoutes from './src/routes/auth.routes.js';
+import userRoutes from './src/routes/user.routes.js';
 import orderRouter from './src/routes/order.routes.js';
 import categoryRouter from './src/routes/category.routes.js';
 import stripeWebhookRoute from './src/routes/stripeWebhookRoute.js';
@@ -32,7 +33,8 @@ if (NODE_ENV === 'development') {
 }
 
 app.use('/api/products', productRouter);
-app.use('/api/auth', userRouter);
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/orders', orderRouter);
 app.use('/api/categories', categoryRouter);
 app.use('/api/cart', cartRoutes);

@@ -45,6 +45,13 @@ const userSchema = new Schema(
                 quantity: Number,
             },
         ],
+        favorites: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Product',
+            },
+        ],
+
         passwordResetToken: String,
         passwordResetExpires: Date,
 
@@ -58,6 +65,11 @@ const userSchema = new Schema(
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
     this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
+
+userSchema.pre(/^find/, function (next) {
+    this.populate('favorites');
     next();
 });
 

@@ -11,7 +11,6 @@ const orderSchema = new mongoose.Schema(
             type: String,
             required: true,
             enum: ['cash', 'stripe'],
-            default: 'cash',
         },
         orderItems: [
             {

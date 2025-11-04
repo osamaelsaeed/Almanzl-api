@@ -4,6 +4,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { SUCCESS } from '../utils/reposnseStatus.js';
 import stripe from '../config/stripe.js';
 import { CLIENT_URL } from '../config/config.js';
+import User from '../models/user.model.js';
 
 export const getAllOrders = asyncHandler(async (req, res) => {
     const user = req.user;
@@ -16,7 +17,9 @@ export const getAllOrders = asyncHandler(async (req, res) => {
 });
 export const createOrderWithStripe = asyncHandler(async (req, res) => {
     const userId = req.id;
-    const { orderItems, shippingAddress, itemsPrice, shippingPrice, discountAmount } = req.body;
+    const { shippingAddress, itemsPrice, shippingPrice, discountAmount } = req.body;
+    const { cart } = await User.findById(userId).select('cart');
+    const orderItems = cart;
     if (!orderItems || orderItems.length === 0) {
         throw new AppError('No order items provided', 400);
     }
@@ -53,19 +56,13 @@ export const createOrderWithStripe = asyncHandler(async (req, res) => {
 
     const order = await Order.create({
         userId,
-        orderItems: orderItems.map((item) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            name: item.name,
-            price: item.price,
-            image: item.image,
-        })),
+        orderItems,
         shippingAddress,
         itemsPrice,
         shippingPrice,
         discountAmount,
         totalPrice,
-        payementMethod: 'stripe',
+        paymentMethod: 'stripe',
         isPaid: false,
         status: 'pending',
     });
@@ -81,7 +78,9 @@ export const createOrderWithStripe = asyncHandler(async (req, res) => {
 
 export const createOrderWithCash = asyncHandler(async (req, res) => {
     const userId = req.id;
-    const { orderItems, shippingAddress, itemsPrice, shippingPrice, discountAmount } = req.body;
+    const { shippingAddress, itemsPrice, shippingPrice, discountAmount } = req.body;
+    const { cart } = await User.findById(userId).select('cart');
+    const orderItems = cart;
     if (!orderItems || orderItems.length === 0) {
         throw new AppError('No order items provided', 400);
     }
@@ -89,19 +88,13 @@ export const createOrderWithCash = asyncHandler(async (req, res) => {
 
     const order = await Order.create({
         userId,
-        orderItems: orderItems.map((item) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            name: item.name,
-            price: item.price,
-            image: item.image,
-        })),
+        orderItems,
         shippingAddress,
         itemsPrice,
         shippingPrice,
         discountAmount,
         totalPrice,
-        payementMethod: 'cash',
+        paymentMethod: 'cash',
         isPaid: true,
         status: 'confirmed',
     });
