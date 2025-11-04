@@ -6,16 +6,19 @@ import Review from '../models/review.model.js';
 
 const router = express.Router({ mergeParams: true });
 
+router.get('/', reviewController.getAllReviews);
+
 router.use(protect);
-
-router
-    .route('/')
-    .get(reviewController.getAllReviews)
-    .post(reviewController.setReviewProductAndUserIds, reviewController.createReview);
-
+router.post('/', reviewController.setReviewProductAndUserIds, reviewController.createReview);
 router
     .route('/:id')
-    .patch(restrictToOwner(Review), reviewController.updateReview)
-    .delete(restrictToOwner(Review), reviewController.deleteReview);
+    .patch(
+        restrictToOwner(Review, 'You can update your review only'),
+        reviewController.updateReview
+    )
+    .delete(
+        restrictToOwner(Review, 'You can delete your review only'),
+        reviewController.deleteReview
+    );
 
 export default router;
