@@ -32,6 +32,17 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
                 });
             }
         }
+        if (event.type === 'checkout.session.expired') {
+            const session = event.data.object;
+            const orderId = session.metadata?.orderId;
+
+            if (orderId) {
+                await Order.findByIdAndUpdate(orderId, {
+                    status: 'cancelled',
+                });
+                console.log(`Order ${orderId} marked as cancelled`);
+            }
+        }
 
         res.json({ received: true });
     } catch (err) {
