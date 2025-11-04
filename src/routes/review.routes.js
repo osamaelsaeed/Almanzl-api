@@ -1,7 +1,7 @@
 import express from 'express';
 import * as reviewController from '../controllers/review.controller.js';
 import { protect } from '../middlewares/protect.middleware.js';
-import restrictToOwner from '../models/checkOwner.js';
+import restrictToOwner from '../utils/checkOwner.js';
 import Review from '../models/review.model.js';
 
 const router = express.Router({ mergeParams: true });
