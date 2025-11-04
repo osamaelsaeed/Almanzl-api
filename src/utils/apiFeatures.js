@@ -39,6 +39,9 @@ class ApiFeatures {
          * This ensures that query parameters sent via URLs are correctly typed and
          * compatible with MongoDB filtering and search behavior.
          */
+
+        const isObjectIdLike = (str) => /^[0-9a-fA-F]{24}$/.test(str);
+
         Object.keys(parsedQuery).forEach((key) => {
             const value = parsedQuery[key];
             // Handle operator-based filters like ?price[gt]=20 → { price: { $gt: 20 } }
@@ -53,7 +56,9 @@ class ApiFeatures {
                 parsedQuery[key] = Number(value);
                 // Handle text filters like ?name=chair → { name: /chair/i }
             } else if (typeof value === 'string') {
-                parsedQuery[key] = new RegExp(value, 'i');
+                if (!isObjectIdLike(value)) {
+                    parsedQuery[key] = new RegExp(value, 'i');
+                }
             }
         });
 
