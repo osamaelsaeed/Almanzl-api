@@ -20,6 +20,7 @@ export const createOrderWithStripe = asyncHandler(async (req, res) => {
     const { shippingAddress, itemsPrice, shippingPrice, discountAmount } = req.body;
     const { cart } = await User.findById(userId).select('cart');
     const orderItems = cart;
+    console.log(cart);
     if (!orderItems || orderItems.length === 0) {
         throw new AppError('No order items provided', 400);
     }
