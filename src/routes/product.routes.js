@@ -9,18 +9,19 @@ import {
 } from '../controllers/product.controller.js';
 import { upload } from '../middlewares/upload.js';
 import reviewRouter from './review.routes.js';
+import { isAdmin, protect } from '../middlewares/protect.middleware.js';
 
 const router = express.Router();
 
 router.use('/:id/reviews', reviewRouter);
 
-router.route('/').get(getAllProducts).post(upload.array('images', 8), addProduct);
+router.route('/').get(getAllProducts).post(protect, isAdmin, upload.array('images', 8), addProduct);
 
 router
     .route('/:id')
     .get(getProduct)
-    .patch(upload.array('images', 8), updateProduct)
-    .delete(deleteProduct);
+    .patch(protect, isAdmin, upload.array('images', 8), updateProduct)
+    .delete(protect, isAdmin, deleteProduct);
 
 router.get('/:id/similar', getSimilarProducts);
 
