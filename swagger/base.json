@@ -1,0 +1,25 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Nodejs Advanced API",
+        "description": "Nodejs Advanced Course API Documentation",
+        "version": "1.0.0",
+        "licenses": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "host": "localhost:3000",
+    "basePath": "/api/",
+    "tags": [
+        {
+            "name": "Almanzl",
+            "description": "Almanzl API Documentation"
+        }
+    ],
+    "schemes": ["https"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "paths": {},
+    "definitions": {}
+}
