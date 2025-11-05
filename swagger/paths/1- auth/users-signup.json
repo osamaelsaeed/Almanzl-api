@@ -5,20 +5,22 @@
             "summary": "Register a new user",
             "description": "Registers a new user with name, email, password, and phone.",
             "operationId": "signupUser",
-            "requestBody": {
-                "required": true,
-                "content": {
-                    "application/json": {
-                        "schema": { "$ref": "#/definitions/SignupRequest" }
-                    }
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "body",
+                    "required": true,
+                    "schema": { "$ref": "#/definitions/SignupRequest" }
                 }
-            },
+            ],
             "responses": {
                 "201": {
                     "description": "User created successfully",
                     "schema": { "$ref": "#/definitions/User" }
                 },
-                "400": { "description": "Validation error" }
+                "400": {
+                    "description": "Validation error"
+                }
             }
         }
     }

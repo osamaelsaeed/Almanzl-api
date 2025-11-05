@@ -35,25 +35,25 @@
         "summary": "Request password reset",
         "description": "Sends a password reset email with a token.",
         "operationId": "forgotPassword",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "email"
-                ],
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "john@example.com"
-                  }
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "email"
+              ],
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "john@example.com"
                 }
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Password reset email sent successfully"
@@ -72,16 +72,16 @@
         "summary": "Login an existing user",
         "description": "Logs in a user and returns a JWT token with profile data.",
         "operationId": "loginUser",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/definitions/LoginRequest"
-              }
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginRequest"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Login successful",
@@ -121,16 +121,16 @@
         "summary": "Reset user password",
         "description": "Resets the user's password using a valid reset token.",
         "operationId": "resetPassword",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/definitions/ResetPasswordRequest"
-              }
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ResetPasswordRequest"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Password reset successful"
@@ -149,16 +149,16 @@
         "summary": "Register a new user",
         "description": "Registers a new user with name, email, password, and phone.",
         "operationId": "signupUser",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/definitions/SignupRequest"
-              }
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SignupRequest"
             }
           }
-        },
+        ],
         "responses": {
           "201": {
             "description": "User created successfully",
@@ -343,6 +343,9 @@
         "summary": "Get logged-in user's profile",
         "description": "Fetches the profile information of the authenticated user.",
         "operationId": "getUserProfile",
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
             "description": "User profile fetched successfully",
@@ -362,38 +365,42 @@
         "summary": "Update user profile",
         "description": "Updates the profile information of the authenticated user.",
         "operationId": "updateUserProfile",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "example": "John Updated"
-                  },
-                  "phone": {
-                    "type": "string",
-                    "example": "+201234567890"
-                  },
-                  "address": {
-                    "type": "string",
-                    "example": "456 Updated Street"
-                  },
-                  "city": {
-                    "type": "string",
-                    "example": "Giza"
-                  },
-                  "country": {
-                    "type": "string",
-                    "example": "Egypt"
-                  }
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User profile data to update",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "John Updated"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "+201234567890"
+                },
+                "address": {
+                  "type": "string",
+                  "example": "456 Updated Street"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "Giza"
+                },
+                "country": {
+                  "type": "string",
+                  "example": "Egypt"
                 }
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Profile updated successfully"

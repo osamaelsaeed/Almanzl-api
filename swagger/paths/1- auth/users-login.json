@@ -5,14 +5,14 @@
             "summary": "Login an existing user",
             "description": "Logs in a user and returns a JWT token with profile data.",
             "operationId": "loginUser",
-            "requestBody": {
-                "required": true,
-                "content": {
-                    "application/json": {
-                        "schema": { "$ref": "#/definitions/LoginRequest" }
-                    }
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "body",
+                    "required": true,
+                    "schema": { "$ref": "#/definitions/LoginRequest" }
                 }
-            },
+            ],
             "responses": {
                 "200": {
                     "description": "Login successful",
