@@ -1,0 +1,45 @@
+{
+    "/users/profile": {
+        "get": {
+            "tags": ["Users"],
+            "summary": "Get logged-in user's profile",
+            "description": "Fetches the profile information of the authenticated user.",
+            "operationId": "getUserProfile",
+            "responses": {
+                "200": {
+                    "description": "User profile fetched successfully",
+                    "schema": { "$ref": "#/definitions/User" }
+                },
+                "401": { "description": "Unauthorized" }
+            }
+        },
+        "put": {
+            "tags": ["Users"],
+            "summary": "Update user profile",
+            "description": "Updates the profile information of the authenticated user.",
+            "operationId": "updateUserProfile",
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": { "type": "string", "example": "John Updated" },
+                                "phone": { "type": "string", "example": "+201234567890" },
+                                "address": { "type": "string", "example": "456 Updated Street" },
+                                "city": { "type": "string", "example": "Giza" },
+                                "country": { "type": "string", "example": "Egypt" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": { "description": "Profile updated successfully" },
+                "400": { "description": "Validation error" },
+                "401": { "description": "Unauthorized" }
+            }
+        }
+    }
+}

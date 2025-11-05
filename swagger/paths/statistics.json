@@ -1,0 +1,80 @@
+{
+    "/statistics/overview": {
+        "get": {
+            "tags": ["Statistics"],
+            "summary": "Get overview of total orders, revenue, users, and products",
+            "security": [{ "bearerAuth": [] }],
+            "responses": {
+                "200": {
+                    "description": "Overview data",
+                    "schema": { "$ref": "#/definitions/StatisticsOverview" }
+                }
+            }
+        }
+    },
+    "/statistics/sales-performance": {
+        "get": {
+            "tags": ["Statistics"],
+            "summary": "Get sales performance over time",
+            "security": [{ "bearerAuth": [] }],
+            "responses": {
+                "200": {
+                    "description": "Sales performance data",
+                    "schema": { "$ref": "#/definitions/SalesPerformance" }
+                }
+            }
+        }
+    },
+    "/statistics/top-products": {
+        "get": {
+            "tags": ["Statistics"],
+            "summary": "Get top selling products",
+            "security": [{ "bearerAuth": [] }],
+            "responses": {
+                "200": {
+                    "description": "Top products",
+                    "schema": { "$ref": "#/definitions/TopProducts" }
+                }
+            }
+        }
+    },
+    "/statistics/sales-by-category": {
+        "get": {
+            "tags": ["Statistics"],
+            "summary": "Get revenue grouped by category",
+            "security": [{ "bearerAuth": [] }],
+            "responses": {
+                "200": {
+                    "description": "Revenue by category",
+                    "schema": { "$ref": "#/definitions/SalesByCategory" }
+                }
+            }
+        }
+    },
+    "/statistics/sales-by-governorate": {
+        "get": {
+            "tags": ["Statistics"],
+            "summary": "Get revenue grouped by governorate",
+            "security": [{ "bearerAuth": [] }],
+            "responses": {
+                "200": {
+                    "description": "Revenue by governorate",
+                    "schema": { "$ref": "#/definitions/SalesByGovernorate" }
+                }
+            }
+        }
+    },
+    "/statistics/orders-status": {
+        "get": {
+            "tags": ["Statistics"],
+            "summary": "Get counts of orders by status",
+            "security": [{ "bearerAuth": [] }],
+            "responses": {
+                "200": {
+                    "description": "Order status counts",
+                    "schema": { "$ref": "#/definitions/OrderStatusCounts" }
+                }
+            }
+        }
+    }
+}

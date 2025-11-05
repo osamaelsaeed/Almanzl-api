@@ -1,0 +1,29 @@
+{
+    "/orders/create-checkout-session": {
+        "post": {
+            "tags": ["Order"],
+            "summary": "Create Stripe checkout session",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": { "$ref": "#/definitions/Order" }
+                }
+            ],
+            "responses": {
+                "201": { "description": "Stripe session created" }
+            }
+        }
+    },
+    "/orders/session/{id}": {
+        "get": {
+            "tags": ["Order"],
+            "summary": "Retrieve Stripe session",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [{ "name": "id", "in": "path", "required": true, "type": "string" }],
+            "responses": { "200": { "description": "Stripe session retrieved" } }
+        }
+    }
+}

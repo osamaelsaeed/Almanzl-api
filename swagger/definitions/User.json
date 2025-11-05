@@ -1,0 +1,41 @@
+{
+    "User": {
+        "type": "object",
+        "properties": {
+            "_id": { "type": "string", "example": "6728e5a9c1d9a5aefc61d6aa" },
+            "name": { "type": "string", "example": "John Doe" },
+            "email": { "type": "string", "example": "john@example.com" },
+            "phone": { "type": "string", "example": "+201000000000" },
+            "address": { "type": "string", "example": "123 Main Street" },
+            "city": { "type": "string", "example": "Cairo" },
+            "postalCode": { "type": "string", "example": "12345" },
+            "country": { "type": "string", "example": "Egypt" },
+            "avatar": { "type": "string", "example": "https://cdn.domain.com/avatar.jpg" },
+            "isAdmin": { "type": "boolean", "example": false },
+            "provider": {
+                "type": "string",
+                "enum": ["local", "google", "github"],
+                "example": "local"
+            },
+            "favorites": {
+                "type": "array",
+                "items": { "$ref": "#/definitions/Product" }
+            },
+            "cart": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "productId": { "type": "string" },
+                        "name": { "type": "string" },
+                        "price": { "type": "number" },
+                        "image": { "type": "string" },
+                        "quantity": { "type": "integer" }
+                    }
+                }
+            },
+            "createdAt": { "type": "string", "example": "2025-11-03T12:00:00Z" },
+            "updatedAt": { "type": "string", "example": "2025-11-03T13:00:00Z" }
+        }
+    }
+}

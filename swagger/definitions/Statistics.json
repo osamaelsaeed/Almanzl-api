@@ -1,0 +1,63 @@
+{
+    "StatisticsOverview": {
+        "type": "object",
+        "properties": {
+            "totalOrders": { "type": "integer", "example": 150 },
+            "totalRevenue": { "type": "number", "example": 45000 },
+            "totalUsers": { "type": "integer", "example": 120 },
+            "totalProducts": { "type": "integer", "example": 35 }
+        }
+    },
+    "SalesPerformance": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "date": { "type": "string", "format": "date", "example": "2025-11-01" },
+                "revenue": { "type": "number", "example": 1500 },
+                "orders": { "type": "integer", "example": 10 }
+            }
+        }
+    },
+    "TopProducts": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "productId": { "type": "string", "example": "64f5c3b2a5f1c2b3e1d6f7b0" },
+                "name": { "type": "string", "example": "Modern Wooden Table" },
+                "unitsSold": { "type": "integer", "example": 50 },
+                "revenue": { "type": "number", "example": 25000 }
+            }
+        }
+    },
+    "SalesByCategory": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "categoryId": { "type": "string", "example": "64f5c3b2a5f1c2b3e1d6f7d1" },
+                "name": { "type": "string", "example": "Electronics" },
+                "revenue": { "type": "number", "example": 15000 }
+            }
+        }
+    },
+    "SalesByGovernorate": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "governorate": { "type": "string", "example": "Cairo" },
+                "revenue": { "type": "number", "example": 20000 }
+            }
+        }
+    },
+    "OrderStatusCounts": {
+        "type": "object",
+        "properties": {
+            "pending": { "type": "integer", "example": 5 },
+            "confirmed": { "type": "integer", "example": 10 },
+            "cancelled": { "type": "integer", "example": 2 }
+        }
+    }
+}

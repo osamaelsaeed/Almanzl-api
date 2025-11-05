@@ -1,0 +1,11 @@
+{
+    "UserFavorites": {
+        "type": "object",
+        "properties": {
+            "favorites": {
+                "type": "array",
+                "items": { "$ref": "#/definitions/Product" }
+            }
+        }
+    }
+}
