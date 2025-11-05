@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Almanzl api swagger docs",
+    "title": "Almanzl api",
     "description": "Nodejs Advanced Course API Documentation",
     "version": "1.0.0",
     "licenses": {

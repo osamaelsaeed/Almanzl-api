@@ -24,6 +24,7 @@ const { readFile } = pkg;
 const swaggerDocument = JSON.parse(
     await readFile(new URL('./swagger/swagger.json', import.meta.url))
 );
+const swaggerDocumentLocal = { ...swaggerDocument, host: 'localhost:3000', schemes: ['http'] };
 
 const app = express();
 // keep this route here before express.json Stripe requires the raw body to verify the signature.
@@ -50,7 +51,11 @@ if (NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(NODE_ENV === 'development' ? swaggerDocumentLocal : swaggerDocument)
+);
 
 app.use('/api/products', productRouter);
 app.use('/api/auth', authRoutes);
