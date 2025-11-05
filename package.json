@@ -5,7 +5,8 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "dev": "cross-env NODE_ENV=development nodemon index.js",
+        "build-swagger": "node combineSwagger.js",
+        "dev": "npm run build-swagger && cross-env NODE_ENV=development nodemon index.js",
         "format": "prettier --write .",
         "start": "cross-env NODE_ENV=production node index.js"
     },
@@ -23,11 +24,13 @@
         "dotenv": "^17.2.3",
         "express": "^5.1.0",
         "express-async-handler": "^1.2.0",
+        "fs-extra": "^11.3.2",
         "jsonwebtoken": "^9.0.2",
         "mongodb": "^6.20.0",
         "mongoose": "^8.19.2",
         "multer": "^2.0.2",
         "nodemailer": "^7.0.10",
+        "nodemailer-brevo-transport": "^2.2.1",
         "passport": "^0.7.0",
         "passport-github2": "^0.1.12",
         "passport-google-oauth20": "^2.0.0",
@@ -35,6 +38,7 @@
         "pg": "^8.16.3",
         "sequelize": "^6.37.7",
         "stripe": "^19.1.0",
+        "swagger-ui-express": "^5.0.1",
         "validator": "^13.15.20"
     },
     "devDependencies": {

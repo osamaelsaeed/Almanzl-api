@@ -1,0 +1,55 @@
+{
+    "/orders/{id}": {
+        "get": {
+            "tags": ["Order"],
+            "summary": "Get order by ID",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [{ "name": "id", "in": "path", "required": true, "type": "string" }],
+            "responses": {
+                "200": {
+                    "description": "Order retrieved",
+                    "schema": { "$ref": "#/definitions/Order" }
+                }
+            }
+        },
+        "put": {
+            "tags": ["Order"],
+            "summary": "Update order status (admin only)",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                { "name": "id", "in": "path", "required": true, "type": "string" },
+                {
+                    "name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "status": {
+                                "type": "string",
+                                "enum": ["pending", "confirmed", "cancelled"]
+                            }
+                        }
+                    }
+                }
+            ],
+            "responses": { "200": { "description": "Order status updated" } }
+        },
+        "delete": {
+            "tags": ["Order"],
+            "summary": "Delete an order (admin only)",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [{ "name": "id", "in": "path", "required": true, "type": "string" }],
+            "responses": { "204": { "description": "Order deleted successfully" } }
+        }
+    },
+    "/orders/{id}/pay": {
+        "put": {
+            "tags": ["Order"],
+            "summary": "Update order payment status",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [{ "name": "id", "in": "path", "required": true, "type": "string" }],
+            "responses": { "200": { "description": "Order payment status updated" } }
+        }
+    }
+}

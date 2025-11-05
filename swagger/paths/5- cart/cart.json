@@ -1,0 +1,36 @@
+{
+    "/cart": {
+        "get": {
+            "tags": ["Cart"],
+            "summary": "Get current user's cart",
+            "security": [{ "bearerAuth": [] }],
+            "responses": {
+                "200": {
+                    "description": "User's cart retrieved",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "cart": { "$ref": "#/definitions/Cart" }
+                        }
+                    }
+                }
+            }
+        },
+        "post": {
+            "tags": ["Cart"],
+            "summary": "Update current user's cart",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": { "$ref": "#/definitions/Cart" }
+                }
+            ],
+            "responses": {
+                "201": { "description": "Cart updated successfully" }
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "CartItem": {
+        "type": "object",
+        "properties": {
+            "productId": { "type": "string", "example": "64f5c3b2a5f1c2b3e1d6f7b0" },
+            "name": { "type": "string", "example": "Modern Wooden Table" },
+            "price": { "type": "number", "example": 2500 },
+            "quantity": { "type": "integer", "example": 2 },
+            "image": { "type": "string", "example": "https://example.com/image.jpg" }
+        },
+        "required": ["productId", "name", "price", "quantity"]
+    },
+    "Cart": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/CartItem" }
+    }
+}

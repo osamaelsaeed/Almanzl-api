@@ -1,0 +1,21 @@
+{
+    "Review": {
+        "type": "object",
+        "properties": {
+            "_id": { "type": "string", "example": "64f5c3b2a5f1c2b3e1d6f7a8" },
+            "rating": { "type": "number", "minimum": 0, "maximum": 5, "example": 4 },
+            "review": { "type": "string", "example": "Great product!" },
+            "product": { "type": "string", "example": "64f5c3b2a5f1c2b3e1d6f7b0" },
+            "user": {
+                "type": "object",
+                "properties": {
+                    "_id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "photo": { "type": "string" }
+                }
+            },
+            "createdAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["rating", "review", "product", "user"]
+    }
+}

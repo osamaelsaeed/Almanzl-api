@@ -43,6 +43,7 @@ const userSchema = new Schema(
                 price: Number,
                 image: String,
                 quantity: Number,
+                stock: Number,
             },
         ],
         favorites: [

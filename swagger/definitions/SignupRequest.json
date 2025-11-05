@@ -1,0 +1,12 @@
+{
+    "SignupRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+            "name": { "type": "string", "example": "John Doe" },
+            "email": { "type": "string", "example": "john@example.com" },
+            "password": { "type": "string", "example": "StrongP@ss123" },
+            "phone": { "type": "string", "example": "+201234567890" }
+        }
+    }
+}
