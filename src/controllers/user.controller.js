@@ -28,6 +28,8 @@ export const removeProductFromFavorites = asyncHandler(async (req, res) => {
     user.favorites = updatedFavorites;
     await user.save();
 
+    await Product.findByIdAndUpdate(productId, { $inc: { favoritesCount: -1 } });
+
     return res.status(200).json({
         status: SUCCESS,
         message: 'Product removed from favorites successfully',
@@ -63,6 +65,8 @@ export const addProductToFavorites = asyncHandler(async (req, res) => {
 
     user.favorites.push(productId);
     await user.save();
+
+    await Product.findByIdAndUpdate(productId, { $inc: { favoritesCount: 1 } });
 
     return res.status(201).json({
         status: SUCCESS,

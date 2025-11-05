@@ -1,4 +1,5 @@
 import Order from '../models/order.model.js';
+import Product from '../models/product.model.js';
 import AppError from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { SUCCESS } from '../utils/reposnseStatus.js';
@@ -22,6 +23,8 @@ export const createOrderWithStripe = asyncHandler(async (req, res) => {
         throw new AppError('No order items provided', 400);
     }
     const totalPrice = Math.max(itemsPrice + shippingPrice - (discountAmount || 0), 0);
+
+    await validateStock(orderItems);
 
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -64,6 +67,8 @@ export const createOrderWithStripe = asyncHandler(async (req, res) => {
         isPaid: false,
         status: 'pending',
     });
+    await updateStock(orderItems);
+
     await stripe.checkout.sessions.update(session.id, {
         metadata: { orderId: order._id.toString(), userId: String(userId) },
     });
@@ -81,6 +86,7 @@ export const createOrderWithCash = asyncHandler(async (req, res) => {
         throw new AppError('No order items provided', 400);
     }
     const totalPrice = Math.max(itemsPrice + shippingPrice - (discountAmount || 0), 0);
+    await validateStock(orderItems);
 
     const order = await Order.create({
         userId,
@@ -94,13 +100,40 @@ export const createOrderWithCash = asyncHandler(async (req, res) => {
         isPaid: true,
         status: 'confirmed',
     });
+    await updateStock(orderItems);
 
+    await User.findByIdAndUpdate(userId, {
+        cart: [],
+    });
     res.status(201).json({
         success: true,
         orderId: order._id,
     });
 });
 
+async function validateStock(orderItems) {
+    for (const item of orderItems) {
+        const product = await Product.findById(item.productId);
+        if (!product) {
+            throw new AppError(`Product not found: ${item.productId}`, 404);
+        }
+        if (product.stock < item.quantity) {
+            throw new AppError(
+                `Not enough stock for ${product.name}. Available: ${product.stock}`,
+                400
+            );
+        }
+    }
+}
+const updateStock = async (orderItems) => {
+    for (const item of orderItems) {
+        await Product.findByIdAndUpdate(
+            item.productId,
+            { $inc: { stock: -item.quantity } },
+            { new: true }
+        );
+    }
+};
 export const retriveStripeSession = asyncHandler(async (req, res) => {
     try {
         const session = await stripe.checkout.sessions.retrieve(req.params.id);

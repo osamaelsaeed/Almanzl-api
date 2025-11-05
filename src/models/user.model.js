@@ -58,6 +58,10 @@ const userSchema = new Schema(
         provider: { type: String, enum: ['local', 'google', 'github'], default: 'local' },
         providerId: { type: String },
         avatar: { type: String },
+        isAdmin: {
+            type: Boolean,
+            default: false,
+        },
     },
     { timestamps: true }
 );
