@@ -26,7 +26,44 @@
   "produces": [
     "application/json"
   ],
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
   "paths": {
+    "/auth/get-all-users": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Get all users (admin only)",
+        "description": "Returns a list of all registered users. Accessible by admins only.",
+        "operationId": "getAllUsers",
+        "responses": {
+          "200": {
+            "description": "List of users",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Admin access only"
+          }
+        }
+      }
+    },
     "/auth/forgot-password": {
       "post": {
         "tags": [
@@ -113,6 +150,59 @@
         }
       }
     },
+    "/auth/{id}": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get logged-in user's profile",
+        "description": "Fetches the profile information of the authenticated user.",
+        "operationId": "getUserProfile",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile fetched successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Delete a user (admin only)",
+        "description": "Deletes a user account by ID. Admin-only endpoint.",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully"
+          },
+          "403": {
+            "description": "Forbidden - Admin access only"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
     "/auth/reset-password": {
       "post": {
         "tags": [
@@ -172,102 +262,17 @@
         }
       }
     },
-    "/admin/users": {
-      "get": {
-        "tags": [
-          "Admin"
-        ],
-        "summary": "Get all users (admin only)",
-        "description": "Returns a list of all registered users. Accessible by admins only.",
-        "operationId": "getAllUsers",
-        "responses": {
-          "200": {
-            "description": "List of users",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden - Admin access only"
-          }
-        }
-      }
-    },
-    "/admin/users/{id}": {
-      "delete": {
-        "tags": [
-          "Admin"
-        ],
-        "summary": "Delete a user (admin only)",
-        "description": "Deletes a user account by ID. Admin-only endpoint.",
-        "operationId": "deleteUser",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User deleted successfully"
-          },
-          "403": {
-            "description": "Forbidden - Admin access only"
-          },
-          "404": {
-            "description": "User not found"
-          }
-        }
-      }
-    },
-    "/users/{id}/favorites": {
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Get user's favorite products",
-        "description": "Fetches the list of products marked as favorites by a specific user.",
-        "operationId": "getUserFavorites",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "User ID",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of favorite products",
-            "schema": {
-              "$ref": "#/definitions/UserFavorites"
-            }
-          },
-          "404": {
-            "description": "User not found"
-          }
-        }
-      },
+    "/user/favorites/{productId}": {
       "post": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "Add product to favorites",
         "description": "Adds a product to the user's favorites list.",
         "operationId": "addFavorite",
         "parameters": [
           {
-            "name": "id",
+            "name": "productId",
             "in": "path",
             "required": true,
             "schema": {
@@ -275,50 +280,29 @@
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "productId": {
-                    "type": "string",
-                    "example": "6728e5a9c1d9a5aefc61d6aa"
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Product added to favorites"
           },
           "400": {
             "description": "Product already in favorites"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       },
       "delete": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "Remove product from favorites",
         "description": "Removes a product from the user's favorites list.",
         "operationId": "removeFavorite",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "productId",
-            "in": "query",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string"
@@ -329,87 +313,11 @@
           "200": {
             "description": "Product removed from favorites"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "404": {
             "description": "Product not found in favorites"
-          }
-        }
-      }
-    },
-    "/users/profile": {
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Get logged-in user's profile",
-        "description": "Fetches the profile information of the authenticated user.",
-        "operationId": "getUserProfile",
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "User profile fetched successfully",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Update user profile",
-        "description": "Updates the profile information of the authenticated user.",
-        "operationId": "updateUserProfile",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "User profile data to update",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "John Updated"
-                },
-                "phone": {
-                  "type": "string",
-                  "example": "+201234567890"
-                },
-                "address": {
-                  "type": "string",
-                  "example": "456 Updated Street"
-                },
-                "city": {
-                  "type": "string",
-                  "example": "Giza"
-                },
-                "country": {
-                  "type": "string",
-                  "example": "Egypt"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Profile updated successfully"
-          },
-          "400": {
-            "description": "Validation error"
-          },
-          "401": {
-            "description": "Unauthorized"
           }
         }
       }

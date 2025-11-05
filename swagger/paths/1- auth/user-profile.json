@@ -1,23 +1,20 @@
 {
-    "/admin/users": {
+    "/auth/{id}": {
         "get": {
-            "tags": ["Admin"],
-            "summary": "Get all users (admin only)",
-            "description": "Returns a list of all registered users. Accessible by admins only.",
-            "operationId": "getAllUsers",
+            "tags": ["Auth"],
+            "summary": "Get logged-in user's profile",
+            "description": "Fetches the profile information of the authenticated user.",
+            "operationId": "getUserProfile",
+            "produces": ["application/json"],
             "responses": {
                 "200": {
-                    "description": "List of users",
-                    "schema": {
-                        "type": "array",
-                        "items": { "$ref": "#/definitions/User" }
-                    }
+                    "description": "User profile fetched successfully",
+                    "schema": { "$ref": "#/definitions/User" }
                 },
-                "403": { "description": "Forbidden - Admin access only" }
+                "401": { "description": "Unauthorized" }
             }
-        }
-    },
-    "/admin/users/{id}": {
+        },
+
         "delete": {
             "tags": ["Admin"],
             "summary": "Delete a user (admin only)",

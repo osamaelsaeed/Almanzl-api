@@ -1,0 +1,42 @@
+{
+    "/user/favorites/{productId}": {
+        "post": {
+            "tags": ["User"],
+            "summary": "Add product to favorites",
+            "description": "Adds a product to the user's favorites list.",
+            "operationId": "addFavorite",
+            "parameters": [
+                {
+                    "name": "productId",
+                    "in": "path",
+                    "required": true,
+                    "schema": { "type": "string" }
+                }
+            ],
+            "responses": {
+                "200": { "description": "Product added to favorites" },
+                "400": { "description": "Product already in favorites" },
+                "401": { "description": "Unauthorized" }
+            }
+        },
+        "delete": {
+            "tags": ["User"],
+            "summary": "Remove product from favorites",
+            "description": "Removes a product from the user's favorites list.",
+            "operationId": "removeFavorite",
+            "parameters": [
+                {
+                    "name": "productId",
+                    "in": "path",
+                    "required": true,
+                    "schema": { "type": "string" }
+                }
+            ],
+            "responses": {
+                "200": { "description": "Product removed from favorites" },
+                "404": { "description": "Product not found in favorites" },
+                "401": { "description": "Unauthorized" }
+            }
+        }
+    }
+}

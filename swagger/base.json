@@ -20,6 +20,20 @@
     "schemes": ["https"],
     "consumes": ["application/json"],
     "produces": ["application/json"],
+    "securityDefinitions": {
+        "bearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+        }
+    },
+
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
     "paths": {},
     "definitions": {}
 }
