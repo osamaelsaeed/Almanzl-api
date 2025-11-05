@@ -6,6 +6,7 @@ import {
     getProduct,
     getSimilarProducts,
     updateProduct,
+    getProductsByCategoryId,
 } from '../controllers/product.controller.js';
 import { upload } from '../middlewares/upload.js';
 import reviewRouter from './review.routes.js';
@@ -24,5 +25,7 @@ router
     .delete(protect, isAdmin, deleteProduct);
 
 router.get('/:id/similar', getSimilarProducts);
+
+router.get('/category/:categoryId', getProductsByCategoryId);
 
 export default router;
