@@ -9,7 +9,7 @@ export const setReviewProductAndUserIds = (req, res, next) => {
     next();
 };
 
-export const getAllReviews = factory.getAll(Review);
+export const getAllReviews = factory.getAll(Review, null, { id: 'product' });
 export const createReview = asyncHandler(async (req, res, next) => {
     const exists = await Review.exists({ user: req.id });
     if (exists) {
