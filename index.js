@@ -26,7 +26,23 @@ app.use('/api/stripe', stripeWebhookRoute);
 app.set('query parser', 'extended');
 app.use(express.json());
 app.use(urlencoded({ extended: true }));
-app.use(cors({ origin: CLIENT_URL, credentials: true }));
+
+const allowedOrigins = [CLIENT_URL, 'https://almanzl.netlify.app/'];
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    next();
+});
 
 if (NODE_ENV === 'development') {
     app.use(morgan('dev'));
