@@ -94,7 +94,9 @@ export const createOrderWithCash = asyncHandler(async (req, res) => {
         isPaid: true,
         status: 'confirmed',
     });
-
+    await User.findByIdAndUpdate(userId, {
+        cart: [],
+    });
     res.status(201).json({
         success: true,
         orderId: order._id,
