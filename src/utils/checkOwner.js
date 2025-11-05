@@ -1,5 +1,5 @@
-import AppError from '../utils/AppError.js';
-import { asyncHandler } from '../utils/asyncHandler.js';
+import AppError from './AppError.js';
+import { asyncHandler } from './asyncHandler.js';
 
 const restrictToOwner = (Model, message) =>
     asyncHandler(async (req, res, next) => {

@@ -102,8 +102,11 @@ export const getTopProducts = async (req, res) => {
             { $unwind: '$orderItems' },
             {
                 $group: {
-                    _id: '$orderItems.product',
+                    _id: '$orderItems.productId',
                     totalSold: { $sum: '$orderItems.quantity' },
+                    totalRevenue: {
+                        $sum: { $multiply: ['$orderItems.price', '$orderItems.quantity'] },
+                    },
                 },
             },
             {
@@ -115,22 +118,46 @@ export const getTopProducts = async (req, res) => {
                 },
             },
             { $unwind: '$productDetails' },
+
+            // ✅ Lookup category name using category ID from product
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: 'productDetails.category',
+                    foreignField: '_id',
+                    as: 'categoryDetails',
+                },
+            },
+            { $unwind: { path: '$categoryDetails', preserveNullAndEmptyArrays: true } },
+
             {
                 $project: {
-                    _id: 1,
-                    totalSold: 1,
-                    name: '$productDetails.name',
-                    price: '$productDetails.price',
+                    _id: 0,
+                    product: '$productDetails.name',
+                    category: '$categoryDetails.name', // ✅ category name instead of ID
                     image: { $arrayElemAt: ['$productDetails.images.url', 0] },
+                    totalSales: '$totalRevenue',
+                    totalSold: 1,
+                    price: '$productDetails.price',
                 },
             },
             { $sort: { totalSold: -1 } },
             { $limit: 5 },
         ]);
 
+        // 🧠 Format final output for frontend table
+        const formatted = topProducts.map((item) => ({
+            product: item.product,
+            category: item.category || 'Uncategorized',
+            stock: item.totalSold > 5 ? 'Available' : 'Sold Out',
+            country: 'New Cairo',
+            revenue: `$${(item.totalSales / 1000).toFixed(2)}K`,
+            totalSales: `$${item.totalSales.toLocaleString()}.00`,
+        }));
+
         res.status(200).json({
             success: true,
-            data: topProducts,
+            data: formatted,
         });
     } catch (error) {
         console.error('Error fetching top products:', error);
