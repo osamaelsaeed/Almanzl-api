@@ -38,3 +38,30 @@ export const getSimilarProducts = asyncHandler(async (req, res, next) => {
         data: similarProducts,
     });
 });
+
+export const getProductsByCategoryId = async (req, res) => {
+    try {
+        const { categoryId } = req.params;
+        if (!categoryId || !categoryId.match(/^[0-9a-fA-F]{24}$/)) {
+            return res.status(400).json({ success: false, message: 'Invalid category ID' });
+        }
+        const products = await Product.find({ category: categoryId });
+
+        if (!products.length) {
+            return res
+                .status(404)
+                .json({ success: false, message: 'No products found for this category' });
+        }
+
+        res.status(200).json({
+            success: true,
+            results: products.length,
+            data: products,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
