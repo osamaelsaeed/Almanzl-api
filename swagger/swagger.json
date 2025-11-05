@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Nodejs Advanced API",
+    "title": "Almanzl api swagger docs",
     "description": "Nodejs Advanced Course API Documentation",
     "version": "1.0.0",
     "licenses": {
@@ -9,7 +9,7 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "host": "localhost:3000",
+  "host": "almanzl.vercel.app",
   "basePath": "/api/",
   "tags": [
     {
