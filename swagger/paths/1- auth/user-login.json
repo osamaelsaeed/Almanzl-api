@@ -5,32 +5,41 @@
             "summary": "Login an existing user",
             "description": "Logs in a user and returns a JWT token with profile data.",
             "operationId": "loginUser",
-            "parameters": [
-                {
-                    "in": "body",
-                    "name": "body",
-                    "required": true,
-                    "schema": { "$ref": "#/definitions/LoginRequest" }
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": { "$ref": "#/components/schemas/LoginRequest" }
+                    }
                 }
-            ],
+            },
             "responses": {
                 "200": {
                     "description": "Login successful",
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "status": { "type": "string", "example": "success" },
-                            "data": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "token": { "type": "string", "example": "eyJhbGciOi..." },
-                                    "user": { "$ref": "#/definitions/User" }
+                                    "status": { "type": "string", "example": "success" },
+                                    "data": {
+                                        "type": "object",
+                                        "properties": {
+                                            "token": {
+                                                "type": "string",
+                                                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                            },
+                                            "user": { "$ref": "#/components/schemas/User" }
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 },
-                "401": { "description": "Invalid credentials" }
+                "401": {
+                    "description": "Invalid credentials"
+                }
             }
         }
     }

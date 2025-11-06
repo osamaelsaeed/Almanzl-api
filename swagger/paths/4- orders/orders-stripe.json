@@ -1,29 +1,30 @@
 {
     "/orders/create-checkout-session": {
         "post": {
-            "tags": ["Order"],
+            "tags": ["Orders"],
             "summary": "Create Stripe checkout session",
+            "description": "Initializes a Stripe checkout session for payment.",
+            "operationId": "createCheckoutSession",
             "security": [{ "bearerAuth": [] }],
-            "parameters": [
-                {
-                    "name": "body",
-                    "in": "body",
-                    "required": true,
-                    "schema": { "$ref": "#/definitions/Order" }
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": { "$ref": "#/components/schemas/CheckoutSessionRequest" }
+                    }
                 }
-            ],
+            },
             "responses": {
-                "201": { "description": "Stripe session created" }
+                "200": {
+                    "description": "Checkout session created",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/CheckoutSessionResponse" }
+                        }
+                    }
+                },
+                "400": { "description": "Failed to create session" }
             }
-        }
-    },
-    "/orders/session/{id}": {
-        "get": {
-            "tags": ["Order"],
-            "summary": "Retrieve Stripe session",
-            "security": [{ "bearerAuth": [] }],
-            "parameters": [{ "name": "id", "in": "path", "required": true, "type": "string" }],
-            "responses": { "200": { "description": "Stripe session retrieved" } }
         }
     }
 }

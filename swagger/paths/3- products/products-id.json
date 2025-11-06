@@ -1,65 +1,79 @@
 {
     "/products/{id}": {
         "get": {
-            "tags": ["Product"],
-            "summary": "Get a product by ID",
-            "description": "Retrieve details of a furniture product by its unique ID",
+            "tags": ["Products"],
+            "summary": "Get a single product by ID",
+            "description": "Fetches detailed information for a specific product by its ID.",
             "operationId": "getProductById",
             "parameters": [
                 {
                     "name": "id",
                     "in": "path",
                     "required": true,
-                    "type": "string",
+                    "schema": { "type": "string" },
                     "description": "Product ID"
                 }
             ],
             "responses": {
                 "200": {
-                    "description": "Product found",
-                    "schema": { "$ref": "#/definitions/Product" }
+                    "description": "Product details retrieved successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/Product" }
+                        }
+                    }
                 },
-                "404": { "description": "Product not found" },
-                "500": { "description": "Server error" }
+                "404": { "description": "Product not found" }
             }
         },
         "patch": {
-            "tags": ["Product"],
-            "summary": "Update a product by ID",
-            "description": "Modify details of an existing furniture product",
+            "tags": ["Products"],
+            "summary": "Update a product",
+            "description": "Updates a product by its ID. Admin access required.",
             "operationId": "updateProduct",
+            "security": [{ "bearerAuth": [] }],
             "parameters": [
                 {
                     "name": "id",
                     "in": "path",
                     "required": true,
-                    "type": "string",
+                    "schema": { "type": "string" },
                     "description": "Product ID"
-                },
-                {
-                    "in": "body",
-                    "name": "body",
-                    "required": true,
-                    "schema": { "$ref": "#/definitions/Product" }
                 }
             ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": { "$ref": "#/components/schemas/ProductUpdate" }
+                    }
+                }
+            },
             "responses": {
-                "200": { "description": "Product updated successfully" },
-                "404": { "description": "Product not found" },
-                "400": { "description": "Invalid data" }
+                "200": {
+                    "description": "Product updated successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/Product" }
+                        }
+                    }
+                },
+                "400": { "description": "Invalid input" },
+                "404": { "description": "Product not found" }
             }
         },
         "delete": {
-            "tags": ["Product"],
-            "summary": "Delete a product by ID",
-            "description": "Remove a furniture product from the store by ID",
+            "tags": ["Products"],
+            "summary": "Delete a product",
+            "description": "Deletes a product by its ID. Admin access required.",
             "operationId": "deleteProduct",
+            "security": [{ "bearerAuth": [] }],
             "parameters": [
                 {
                     "name": "id",
                     "in": "path",
                     "required": true,
-                    "type": "string",
+                    "schema": { "type": "string" },
                     "description": "Product ID"
                 }
             ],

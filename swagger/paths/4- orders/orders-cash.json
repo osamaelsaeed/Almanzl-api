@@ -1,19 +1,61 @@
 {
     "/orders/create-order-cash": {
         "post": {
-            "tags": ["Order"],
-            "summary": "Create cash order",
+            "tags": ["Orders"],
+            "summary": "Create order with cash payment",
+            "description": "Creates a new order using the cash payment method. Calculates totalPrice server-side, updates stock and clears user cart. Requires authentication.",
+            "operationId": "createOrderWithCash",
             "security": [{ "bearerAuth": [] }],
-            "parameters": [
-                {
-                    "name": "body",
-                    "in": "body",
-                    "required": true,
-                    "schema": { "$ref": "#/definitions/Order" }
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": { "$ref": "#/components/schemas/OrderCreateCash" },
+                        "example": {
+                            "orderItems": [
+                                {
+                                    "productId": "6728e5a9c1d9a5aefc61d6aa",
+                                    "name": "Modern Wooden Table",
+                                    "price": 2500,
+                                    "image": "https://cdn.domain.com/images/table.jpg",
+                                    "quantity": 2
+                                }
+                            ],
+                            "shippingAddress": {
+                                "address": "123 Main Street",
+                                "city": "Cairo",
+                                "postalCode": "12345",
+                                "country": "Egypt"
+                            },
+                            "itemsPrice": 5000,
+                            "shippingPrice": 100,
+                            "discountAmount": 0
+                        }
+                    }
                 }
-            ],
+            },
             "responses": {
-                "201": { "description": "Cash order created" }
+                "201": {
+                    "description": "Order created successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean", "example": true },
+                                    "orderId": {
+                                        "type": "string",
+                                        "example": "6730e5a9c1d9a5aefc61d6bb"
+                                    }
+                                },
+                                "required": ["success", "orderId"]
+                            },
+                            "example": { "success": true, "orderId": "6730e5a9c1d9a5aefc61d6bb" }
+                        }
+                    }
+                },
+                "400": { "description": "Invalid input (e.g. no order items provided)" },
+                "401": { "description": "Unauthorized" }
             }
         }
     }

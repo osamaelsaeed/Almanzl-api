@@ -1,0 +1,44 @@
+{
+    "Review": {
+        "type": "object",
+        "required": ["rating", "review", "product", "user"],
+        "properties": {
+            "_id": {
+                "type": "string",
+                "example": "64f5c3b2a5f1c2b3e1d6f7a8"
+            },
+            "rating": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 5,
+                "example": 4
+            },
+            "review": {
+                "type": "string",
+                "example": "Great product!"
+            },
+            "product": {
+                "type": "string",
+                "example": "64f5c3b2a5f1c2b3e1d6f7b0",
+                "description": "The ID of the product being reviewed."
+            },
+            "user": {
+                "type": "object",
+                "properties": {
+                    "_id": { "type": "string", "example": "6728e5a9c1d9a5aefc61d6aa" },
+                    "name": { "type": "string", "example": "John Doe" },
+                    "photo": {
+                        "type": "string",
+                        "example": "https://cdn.domain.com/images/user123.jpg"
+                    }
+                }
+            },
+            "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-11-05T10:00:00Z"
+            }
+        },
+        "description": "Represents a product review including rating, text, product, and reviewer."
+    }
+}

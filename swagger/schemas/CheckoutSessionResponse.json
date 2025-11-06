@@ -1,0 +1,16 @@
+{
+    "CheckoutSessionResponse": {
+        "type": "object",
+        "properties": {
+            "sessionId": {
+                "type": "string",
+                "example": "cs_test_a1B2C3D4E5"
+            },
+            "url": {
+                "type": "string",
+                "example": "https://checkout.stripe.com/pay/cs_test_a1B2C3D4E5"
+            }
+        },
+        "description": "Response returned after successfully creating a Stripe checkout session."
+    }
+}

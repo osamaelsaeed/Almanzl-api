@@ -1,30 +1,44 @@
 {
     "/products/category/{categoryId}": {
         "get": {
-            "tags": ["Product"],
-            "summary": "Get products by category ID",
-            "description": "Retrieve all furniture products that belong to a specific category",
-            "operationId": "getProductsByCategoryId",
+            "tags": ["Products"],
+            "summary": "Get products by category",
+            "description": "Retrieves all products that belong to a specific category.",
+            "operationId": "getProductsByCategory",
             "parameters": [
                 {
                     "name": "categoryId",
                     "in": "path",
                     "required": true,
-                    "type": "string",
-                    "description": "Category ID"
+                    "schema": { "type": "string", "example": "6728e5a9c1d9a5aefc61d6aa" },
+                    "description": "The ID of the category to filter products by"
+                },
+                {
+                    "name": "limit",
+                    "in": "query",
+                    "schema": { "type": "integer", "example": 10 },
+                    "description": "Limit the number of results returned"
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "schema": { "type": "integer", "example": 1 },
+                    "description": "Specify the page number for pagination"
                 }
             ],
             "responses": {
                 "200": {
-                    "description": "A list of products in the selected category",
-                    "schema": {
-                        "type": "array",
-                        "items": { "$ref": "#/definitions/Product" }
+                    "description": "Products in the specified category retrieved successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": { "$ref": "#/components/schemas/Product" }
+                            }
+                        }
                     }
                 },
-                "404": { "description": "No products found for this category" },
-                "400": { "description": "Invalid category ID" },
-                "500": { "description": "Server error" }
+                "404": { "description": "Category not found or has no products" }
             }
         }
     }

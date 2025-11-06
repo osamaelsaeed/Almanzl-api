@@ -1,0 +1,34 @@
+{
+    "ProductRequest": {
+        "type": "object",
+        "required": ["name", "description", "price", "category"],
+        "properties": {
+            "name": { "type": "string", "example": "Modern Wooden Table" },
+            "description": {
+                "type": "string",
+                "example": "A beautifully crafted modern wooden dining table."
+            },
+            "price": { "type": "number", "example": 2500 },
+            "stock": { "type": "integer", "example": 25 },
+            "category": {
+                "type": "string",
+                "example": "64e5b0f6c2a7e3a0f1234567",
+                "description": "The ID of the product's category."
+            },
+            "images": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "public_id": { "type": "string", "example": "abc123" },
+                        "url": {
+                            "type": "string",
+                            "example": "https://cdn.domain.com/images/table.jpg"
+                        }
+                    }
+                }
+            }
+        },
+        "description": "Request body for creating a new product."
+    }
+}

@@ -1,40 +1,87 @@
 {
     "/categories/{id}": {
         "get": {
-            "tags": ["Category"],
+            "tags": ["Categories"],
             "summary": "Get category by ID",
-            "parameters": [{ "name": "id", "in": "path", "required": true, "type": "string" }],
-            "responses": {
-                "200": {
-                    "description": "Category retrieved",
-                    "schema": { "$ref": "#/definitions/Category" }
-                }
-            }
-        },
-        "put": {
-            "tags": ["Category"],
-            "summary": "Update category by ID (admin only)",
+            "description": "Fetches details of a single category by its ID.",
+            "operationId": "getCategoryById",
             "parameters": [
-                { "name": "id", "in": "path", "required": true, "type": "string" },
                 {
-                    "name": "body",
-                    "in": "body",
+                    "name": "id",
+                    "in": "path",
                     "required": true,
-                    "schema": { "$ref": "#/definitions/Category" }
+                    "schema": { "type": "string" },
+                    "description": "Category ID"
                 }
             ],
             "responses": {
                 "200": {
-                    "description": "Category updated successfully",
-                    "schema": { "$ref": "#/definitions/Category" }
+                    "description": "Category fetched successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/Category" }
+                        }
+                    }
+                },
+                "404": { "description": "Category not found" }
+            }
+        },
+        "put": {
+            "tags": ["Categories"],
+            "summary": "Update category (Admin only)",
+            "description": "Updates a category by ID. Only admins can perform this action.",
+            "operationId": "updateCategory",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": { "type": "string" },
+                    "description": "Category ID"
                 }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": { "$ref": "#/components/schemas/CategoryUpdate" }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Category updated successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/Category" }
+                        }
+                    }
+                },
+                "400": { "description": "Invalid input" },
+                "404": { "description": "Category not found" }
             }
         },
         "delete": {
-            "tags": ["Category"],
-            "summary": "Delete category by ID (admin only)",
-            "parameters": [{ "name": "id", "in": "path", "required": true, "type": "string" }],
-            "responses": { "200": { "description": "Category deleted successfully" } }
+            "tags": ["Categories"],
+            "summary": "Delete category (Admin only)",
+            "description": "Deletes a category by ID. Admin-only endpoint.",
+            "operationId": "deleteCategory",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": { "type": "string" },
+                    "description": "Category ID"
+                }
+            ],
+            "responses": {
+                "200": { "description": "Category deleted successfully" },
+                "404": { "description": "Category not found" },
+                "403": { "description": "Forbidden - Admin access only" }
+            }
         }
     }
 }

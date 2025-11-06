@@ -1,0 +1,91 @@
+{
+    "StatisticsOverview": {
+        "type": "object",
+        "properties": {
+            "totalOrders": { "type": "integer", "example": 420 },
+            "totalRevenue": { "type": "number", "format": "float", "example": 157500.75 },
+            "totalUsers": { "type": "integer", "example": 340 },
+            "totalProducts": { "type": "integer", "example": 85 }
+        },
+        "description": "Summary of total orders, total revenue, total users, and total products."
+    },
+    "SalesPerformance": {
+        "type": "object",
+        "properties": {
+            "timeFrame": { "type": "string", "example": "Monthly" },
+            "data": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "month": { "type": "string", "example": "November 2025" },
+                        "sales": { "type": "number", "example": 12500.5 },
+                        "orders": { "type": "integer", "example": 145 }
+                    }
+                }
+            }
+        },
+        "description": "Represents sales and orders performance grouped by time (e.g. monthly)."
+    },
+    "TopProducts": {
+        "type": "object",
+        "properties": {
+            "products": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "productId": { "type": "string", "example": "6730d0a1b5e1d3f1b8e01a4c" },
+                        "name": { "type": "string", "example": "Modern Wooden Table" },
+                        "totalSales": { "type": "integer", "example": 320 },
+                        "revenue": { "type": "number", "example": 25000.0 }
+                    }
+                }
+            }
+        },
+        "description": "List of top-selling products by total sales and revenue."
+    },
+    "SalesByCategory": {
+        "type": "object",
+        "properties": {
+            "categories": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "category": { "type": "string", "example": "Furniture" },
+                        "totalRevenue": { "type": "number", "example": 48500.5 },
+                        "orderCount": { "type": "integer", "example": 210 }
+                    }
+                }
+            }
+        },
+        "description": "Revenue and order distribution grouped by product category."
+    },
+    "SalesByGovernorate": {
+        "type": "object",
+        "properties": {
+            "governorates": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "governorate": { "type": "string", "example": "Cairo" },
+                        "totalRevenue": { "type": "number", "example": 30500.25 },
+                        "orderCount": { "type": "integer", "example": 170 }
+                    }
+                }
+            }
+        },
+        "description": "Revenue and order count grouped by governorate."
+    },
+    "OrderStatusCounts": {
+        "type": "object",
+        "properties": {
+            "pending": { "type": "integer", "example": 12 },
+            "confirmed": { "type": "integer", "example": 85 },
+            "cancelled": { "type": "integer", "example": 5 }
+        },
+        "description": "Counts of orders grouped by their status."
+    }
+}

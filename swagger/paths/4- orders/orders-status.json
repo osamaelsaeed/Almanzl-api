@@ -1,0 +1,41 @@
+{
+    "/orders/{id}/status": {
+        "put": {
+            "tags": ["Orders"],
+            "summary": "Update order status (Admin only)",
+            "description": "Updates the order status (pending, confirmed, cancelled).",
+            "operationId": "updateOrderStatus",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": { "type": "string" },
+                    "description": "Order ID"
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "enum": ["pending", "confirmed", "cancelled"],
+                                    "example": "confirmed"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": { "description": "Order status updated successfully" },
+                "404": { "description": "Order not found" }
+            }
+        }
+    }
+}

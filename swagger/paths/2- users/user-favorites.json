@@ -5,16 +5,33 @@
             "summary": "Add product to favorites",
             "description": "Adds a product to the user's favorites list.",
             "operationId": "addFavorite",
+            "security": [{ "bearerAuth": [] }],
             "parameters": [
                 {
                     "name": "productId",
                     "in": "path",
                     "required": true,
-                    "schema": { "type": "string" }
+                    "schema": { "type": "string" },
+                    "description": "Product ID"
                 }
             ],
             "responses": {
-                "200": { "description": "Product added to favorites" },
+                "200": {
+                    "description": "Product added to favorites",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": { "type": "string", "example": "6728e5a9c1d9a5aefc61d6aa" }
+                            },
+                            "example": [
+                                "6728e5a9c1d9a5aefc61d6aa",
+                                "6728e5a9c1d9a5aefc61d6bb",
+                                "6728e5a9c1d9a5aefc61d6cc"
+                            ]
+                        }
+                    }
+                },
                 "400": { "description": "Product already in favorites" },
                 "401": { "description": "Unauthorized" }
             }
@@ -24,16 +41,29 @@
             "summary": "Remove product from favorites",
             "description": "Removes a product from the user's favorites list.",
             "operationId": "removeFavorite",
+            "security": [{ "bearerAuth": [] }],
             "parameters": [
                 {
                     "name": "productId",
                     "in": "path",
                     "required": true,
-                    "schema": { "type": "string" }
+                    "schema": { "type": "string" },
+                    "description": "Product ID"
                 }
             ],
             "responses": {
-                "200": { "description": "Product removed from favorites" },
+                "200": {
+                    "description": "Product removed from favorites",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": { "type": "string", "example": "6728e5a9c1d9a5aefc61d6aa" }
+                            },
+                            "example": ["6728e5a9c1d9a5aefc61d6bb", "6728e5a9c1d9a5aefc61d6cc"]
+                        }
+                    }
+                },
                 "404": { "description": "Product not found in favorites" },
                 "401": { "description": "Unauthorized" }
             }

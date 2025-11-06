@@ -3,12 +3,20 @@
         "get": {
             "tags": ["Statistics"],
             "summary": "Get overview of total orders, revenue, users, and products",
+            "description": "Returns summary data including total orders, revenue, users, and products. Requires admin access.",
+            "operationId": "getOverview",
             "security": [{ "bearerAuth": [] }],
             "responses": {
                 "200": {
-                    "description": "Overview data",
-                    "schema": { "$ref": "#/definitions/StatisticsOverview" }
-                }
+                    "description": "Overview data retrieved successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/StatisticsOverview" }
+                        }
+                    }
+                },
+                "401": { "description": "Unauthorized" },
+                "403": { "description": "Forbidden – Admin access only" }
             }
         }
     },
@@ -16,12 +24,20 @@
         "get": {
             "tags": ["Statistics"],
             "summary": "Get sales performance over time",
+            "description": "Returns sales performance data grouped by time period. Requires admin access.",
+            "operationId": "getSalesPerformance",
             "security": [{ "bearerAuth": [] }],
             "responses": {
                 "200": {
-                    "description": "Sales performance data",
-                    "schema": { "$ref": "#/definitions/SalesPerformance" }
-                }
+                    "description": "Sales performance data retrieved successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/SalesPerformance" }
+                        }
+                    }
+                },
+                "401": { "description": "Unauthorized" },
+                "403": { "description": "Forbidden – Admin access only" }
             }
         }
     },
@@ -29,12 +45,20 @@
         "get": {
             "tags": ["Statistics"],
             "summary": "Get top selling products",
+            "description": "Fetches a list of top-performing products based on sales volume or revenue.",
+            "operationId": "getTopProducts",
             "security": [{ "bearerAuth": [] }],
             "responses": {
                 "200": {
-                    "description": "Top products",
-                    "schema": { "$ref": "#/definitions/TopProducts" }
-                }
+                    "description": "Top products retrieved successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/TopProducts" }
+                        }
+                    }
+                },
+                "401": { "description": "Unauthorized" },
+                "403": { "description": "Forbidden – Admin access only" }
             }
         }
     },
@@ -42,12 +66,20 @@
         "get": {
             "tags": ["Statistics"],
             "summary": "Get revenue grouped by category",
+            "description": "Returns sales and revenue data grouped by product categories.",
+            "operationId": "getSalesByCategory",
             "security": [{ "bearerAuth": [] }],
             "responses": {
                 "200": {
-                    "description": "Revenue by category",
-                    "schema": { "$ref": "#/definitions/SalesByCategory" }
-                }
+                    "description": "Revenue by category retrieved successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/SalesByCategory" }
+                        }
+                    }
+                },
+                "401": { "description": "Unauthorized" },
+                "403": { "description": "Forbidden – Admin access only" }
             }
         }
     },
@@ -55,12 +87,20 @@
         "get": {
             "tags": ["Statistics"],
             "summary": "Get revenue grouped by governorate",
+            "description": "Provides sales revenue breakdown grouped by governorate. Requires admin access.",
+            "operationId": "getSalesByGovernorate",
             "security": [{ "bearerAuth": [] }],
             "responses": {
                 "200": {
-                    "description": "Revenue by governorate",
-                    "schema": { "$ref": "#/definitions/SalesByGovernorate" }
-                }
+                    "description": "Revenue by governorate retrieved successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/SalesByGovernorate" }
+                        }
+                    }
+                },
+                "401": { "description": "Unauthorized" },
+                "403": { "description": "Forbidden – Admin access only" }
             }
         }
     },
@@ -68,12 +108,20 @@
         "get": {
             "tags": ["Statistics"],
             "summary": "Get counts of orders by status",
+            "description": "Returns the total count of orders by their status (pending, confirmed, cancelled).",
+            "operationId": "getOrderStatusCounts",
             "security": [{ "bearerAuth": [] }],
             "responses": {
                 "200": {
-                    "description": "Order status counts",
-                    "schema": { "$ref": "#/definitions/OrderStatusCounts" }
-                }
+                    "description": "Order status counts retrieved successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/OrderStatusCounts" }
+                        }
+                    }
+                },
+                "401": { "description": "Unauthorized" },
+                "403": { "description": "Forbidden – Admin access only" }
             }
         }
     }

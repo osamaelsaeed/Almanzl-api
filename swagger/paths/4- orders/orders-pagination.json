@@ -1,17 +1,26 @@
 {
     "/orders/get-paginated-orders": {
         "get": {
-            "tags": ["Order"],
+            "tags": ["Orders"],
             "summary": "Get paginated orders",
+            "description": "Retrieves a paginated list of orders.",
+            "operationId": "getAllOrdersPaginated",
             "security": [{ "bearerAuth": [] }],
-            "responses": {
-                "200": {
-                    "description": "Paginated list of orders",
-                    "schema": {
-                        "type": "array",
-                        "items": { "$ref": "#/definitions/Order" }
-                    }
+            "parameters": [
+                {
+                    "name": "page",
+                    "in": "query",
+                    "schema": { "type": "integer", "example": 1 }
+                },
+                {
+                    "name": "limit",
+                    "in": "query",
+                    "schema": { "type": "integer", "example": 10 }
                 }
+            ],
+            "responses": {
+                "200": { "description": "Paginated orders retrieved successfully" },
+                "401": { "description": "Unauthorized" }
             }
         }
     }

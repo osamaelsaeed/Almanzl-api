@@ -1,0 +1,105 @@
+{
+    "/products/{productId}/reviews/{reviewId}": {
+        "patch": {
+            "tags": ["Review"],
+            "summary": "Update a review",
+            "description": "Updates an existing review for a product. Requires authentication and that the user owns the review.",
+            "operationId": "updateReview",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                {
+                    "name": "productId",
+                    "in": "path",
+                    "required": true,
+                    "schema": { "type": "string" },
+                    "description": "Product ID to which the review belongs"
+                },
+                {
+                    "name": "reviewId",
+                    "in": "path",
+                    "required": true,
+                    "schema": { "type": "string" },
+                    "description": "Review ID to update"
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "rating": { "type": "number", "example": 4 },
+                                "review": {
+                                    "type": "string",
+                                    "example": "Good product, but delivery was slow."
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Review updated successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/Review" },
+                            "example": {
+                                "_id": "6740f6a8e1b0a8b7b2f7d12a",
+                                "rating": 4,
+                                "review": "Good product, but delivery was slow.",
+                                "product": "6728e5a9c1d9a5aefc61d6bb",
+                                "user": {
+                                    "_id": "6730e5a9c1d9a5aefc61d6aa",
+                                    "name": "John Doe",
+                                    "photo": "https://cdn.domain.com/users/john.jpg"
+                                },
+                                "createdAt": "2025-11-06T12:00:00Z"
+                            }
+                        }
+                    }
+                },
+                "401": { "description": "Unauthorized" },
+                "403": { "description": "Forbidden – You can update your own review only" },
+                "404": { "description": "Review not found" }
+            }
+        },
+        "delete": {
+            "tags": ["Review"],
+            "summary": "Delete a review",
+            "description": "Deletes an existing review for a product. Requires authentication and that the user owns the review.",
+            "operationId": "deleteReview",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                {
+                    "name": "productId",
+                    "in": "path",
+                    "required": true,
+                    "schema": { "type": "string" },
+                    "description": "Product ID to which the review belongs"
+                },
+                {
+                    "name": "reviewId",
+                    "in": "path",
+                    "required": true,
+                    "schema": { "type": "string" },
+                    "description": "Review ID to delete"
+                }
+            ],
+            "responses": {
+                "204": {
+                    "description": "Review deleted successfully",
+                    "content": {
+                        "application/json": {
+                            "example": { "success": true, "message": "Review deleted successfully" }
+                        }
+                    }
+                },
+                "401": { "description": "Unauthorized" },
+                "403": { "description": "Forbidden – You can delete your own review only" },
+                "404": { "description": "Review not found" }
+            }
+        }
+    }
+}

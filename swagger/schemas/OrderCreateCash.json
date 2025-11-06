@@ -1,0 +1,50 @@
+{
+    "OrderCreateCash": {
+        "type": "object",
+        "required": [
+            "paymentMethod",
+            "orderItems",
+            "shippingAddress",
+            "itemsPrice",
+            "shippingPrice",
+            "totalPrice"
+        ],
+        "properties": {
+            "paymentMethod": {
+                "type": "string",
+                "enum": ["cash", "stripe"],
+                "example": "cash"
+            },
+            "orderItems": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "productId": { "type": "string", "example": "6728e5a9c1d9a5aefc61d6aa" },
+                        "name": { "type": "string", "example": "Modern Wooden Table" },
+                        "price": { "type": "number", "example": 2500 },
+                        "image": {
+                            "type": "string",
+                            "example": "https://cdn.domain.com/images/table.jpg"
+                        },
+                        "quantity": { "type": "integer", "example": 2 },
+                        "stock": { "type": "integer", "example": 8 }
+                    }
+                }
+            },
+            "shippingAddress": {
+                "type": "object",
+                "properties": {
+                    "address": { "type": "string", "example": "123 Main Street" },
+                    "city": { "type": "string", "example": "Cairo" },
+                    "postalCode": { "type": "string", "example": "12345" },
+                    "country": { "type": "string", "example": "Egypt" }
+                }
+            },
+            "itemsPrice": { "type": "number", "example": 5000 },
+            "shippingPrice": { "type": "number", "example": 100 },
+            "discountAmount": { "type": "number", "example": 0 }
+        },
+        "description": "Request body for creating an order with cash payment."
+    }
+}

@@ -211,6 +211,8 @@ export const createOrder = asyncHandler(async (req, res) => {
         totalPrice,
     } = req.body;
 
+    console.log(`This is the ${JSON.stringify(req.body)}`);
+
     if (!orderItems || orderItems.length === 0) {
         return res.status(400).json({
             success: false,
@@ -236,7 +238,7 @@ export const createOrder = asyncHandler(async (req, res) => {
         userId: req.user._id,
         orderItems,
         shippingAddress,
-        payementMethod: paymentMethod,
+        paymentMethod: paymentMethod,
         itemsPrice,
         shippingPrice,
         discountAmount: discountAmount || 0,

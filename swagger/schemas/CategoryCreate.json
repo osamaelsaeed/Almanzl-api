@@ -1,0 +1,21 @@
+{
+    "CategoryCreate": {
+        "type": "object",
+        "required": ["name", "icon"],
+        "properties": {
+            "name": { "type": "string", "example": "Furniture" },
+            "description": { "type": "string", "example": "Furniture items and decor" },
+            "icon": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "example": "https://cdn.domain.com/icons/furniture.png"
+                    },
+                    "public_id": { "type": "string", "example": "cat_123" }
+                }
+            }
+        },
+        "description": "Request body for creating a new category."
+    }
+}

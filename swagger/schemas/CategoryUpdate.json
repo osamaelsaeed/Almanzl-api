@@ -1,0 +1,20 @@
+{
+    "CategoryUpdate": {
+        "type": "object",
+        "properties": {
+            "name": { "type": "string", "example": "Updated Furniture" },
+            "description": { "type": "string", "example": "Updated description for category" },
+            "icon": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "example": "https://cdn.domain.com/icons/furniture_updated.png"
+                    },
+                    "public_id": { "type": "string", "example": "cat_123_updated" }
+                }
+            }
+        },
+        "description": "Request body for updating a category."
+    }
+}

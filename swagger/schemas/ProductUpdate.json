@@ -1,0 +1,26 @@
+{
+    "ProductUpdate": {
+        "type": "object",
+        "properties": {
+            "name": { "type": "string", "example": "Updated Wooden Table" },
+            "description": { "type": "string", "example": "Updated product description." },
+            "price": { "type": "number", "example": 2600 },
+            "stock": { "type": "integer", "example": 30 },
+            "category": { "type": "string", "example": "64e5b0f6c2a7e3a0f1234567" },
+            "images": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "public_id": { "type": "string", "example": "abc123" },
+                        "url": {
+                            "type": "string",
+                            "example": "https://cdn.domain.com/images/table.jpg"
+                        }
+                    }
+                }
+            }
+        },
+        "description": "Request body for updating an existing product."
+    }
+}
