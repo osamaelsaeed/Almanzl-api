@@ -3,6 +3,7 @@ import {
     getAllOrders,
     createOrderWithStripe,
     getAllOrdersPaginated,
+    getUserOrdersPaginated,
     getOrderById,
     updateOrderStatus,
     deleteOrder,
@@ -18,6 +19,7 @@ router.route('/create-checkout-session').post(protect, createOrderWithStripe);
 router.route('/create-order-cash').post(protect, createOrderWithCash);
 router.route('/session/:id').get(protect, retriveStripeSession);
 router.route('/get-paginated-orders').get(protect, getAllOrdersPaginated);
+router.route('/get-paginated-user-orders').get(protect, getUserOrdersPaginated);
 router.route('/:id').get(protect, getOrderById);
 router.put('/:id/status', protect, isAdmin, updateOrderStatus);
 router.put('/:id/pay', protect, updateOrderPaidStatus);
