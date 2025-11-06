@@ -6,7 +6,6 @@ export const sendEmail = async ({ to, subject, text, html }) => {
     let transporter;
 
     if (NODE_ENV === 'production') {
-        console.log('in production' + process.env.BREVO_API_KEY);
         transporter = nodemailer.createTransport(
             new BrevoTransport({
                 apiKey: process.env.BREVO_API_KEY,
@@ -32,12 +31,5 @@ export const sendEmail = async ({ to, subject, text, html }) => {
         html,
     };
 
-    try {
-        const info = await transporter.sendMail(mailOptions);
-        console.log('✅ Email sent successfully!');
-        console.log('Message ID:', info.messageId);
-        console.log('Preview URL:', nodemailer.getTestMessageUrl(info)); // works for dev/test
-    } catch (error) {
-        console.error('❌ Error sending email:', error);
-    }
+    await transporter.sendMail(mailOptions);
 };
