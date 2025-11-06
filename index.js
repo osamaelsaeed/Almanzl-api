@@ -94,6 +94,31 @@ app.get('/api-docs', (req, res) => {
 </html>`);
 });
 
+// Redirect common swagger-ui asset requests under /api-docs to the CDN.
+// Some deployments (Vercel) rewrite unknown asset requests to HTML which causes
+// the `Unexpected token '<'` error when the browser expects JS. Redirecting
+// these specific asset requests to the CDN ensures the browser gets the correct
+// JS/CSS and not an HTML page.
+const CDN = {
+    bundle: SWAGGER_BUNDLE,
+    standalone: SWAGGER_STANDALONE,
+    css: SWAGGER_CSS,
+    'favicon-32x32.png':
+        'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/favicon-32x32.png',
+    'favicon-16x16.png':
+        'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/favicon-16x16.png',
+    'favicon.ico': 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/favicon-32x32.png',
+};
+
+app.get('/api-docs/swagger-ui-bundle.js', (req, res) => res.redirect(302, CDN.bundle));
+app.get('/api-docs/swagger-ui-standalone-preset.js', (req, res) =>
+    res.redirect(302, CDN.standalone)
+);
+app.get('/api-docs/swagger-ui.css', (req, res) => res.redirect(302, CDN.css));
+app.get('/api-docs/favicon-32x32.png', (req, res) => res.redirect(302, CDN['favicon-32x32.png']));
+app.get('/api-docs/favicon-16x16.png', (req, res) => res.redirect(302, CDN['favicon-16x16.png']));
+app.get('/api-docs/favicon.ico', (req, res) => res.redirect(302, CDN['favicon.ico']));
+
 app.get('/swagger.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(swaggerDocument);
