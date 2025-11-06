@@ -11,7 +11,8 @@ export const setReviewProductAndUserIds = (req, res, next) => {
 
 export const getAllReviews = factory.getAll(Review, null, { id: 'product' });
 export const createReview = asyncHandler(async (req, res, next) => {
-    const exists = await Review.exists({ user: req.id });
+    const productId = req.params.id;
+    const exists = await Review.exists({ user: req.id, product: productId });
     if (exists) {
         return res.status(409).json({
             status: FAIL,
