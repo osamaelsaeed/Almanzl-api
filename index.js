@@ -55,13 +55,22 @@ app.use((req, res, next) => {
 if (NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
+app.get('/api-docs/swagger.json', async (req, res) => {
+    const filePath = path.join(__dirname, 'swagger', 'swagger.json');
+    const data = await readFile(filePath, 'utf-8');
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.parse(data));
+});
 
-app.use('/swagger-ui', express.static(swaggerUiDist.getAbsoluteFSPath()));
-
+// Serve Swagger UI
 app.use(
     '/api-docs',
-    swaggerUi.serveFiles(swaggerDocument, { basePath: '/swagger-ui' }),
-    swaggerUi.setup(swaggerDocument)
+    swaggerUi.serve,
+    swaggerUi.setup(null, {
+        swaggerOptions: {
+            url: '/api-docs/swagger.json',
+        },
+    })
 );
 
 app.use('/api/products', productRouter);
