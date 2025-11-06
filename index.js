@@ -18,6 +18,7 @@ import globalErrorHandler from './src/utils/globalErrorHandler.js';
 import cartRoutes from './src/routes/cart.routes.js';
 import statisticsRoutes from './src/routes/statistics.routes.js';
 import swaggerUi from 'swagger-ui-express';
+import swaggerUiDist from 'swagger-ui-dist';
 import pkg from 'fs-extra';
 const { readFile } = pkg;
 
@@ -50,12 +51,12 @@ if (NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
+app.use('/swagger-ui', express.static(swaggerUiDist.getAbsoluteFSPath()));
+
 app.use(
     '/api-docs',
-    swaggerUi.serve,
-    swaggerUi.setup(swaggerDocument, {
-        customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css',
-    })
+    swaggerUi.serveFiles(swaggerDocument, { basePath: '/swagger-ui' }),
+    swaggerUi.setup(swaggerDocument)
 );
 
 app.use('/api/products', productRouter);
