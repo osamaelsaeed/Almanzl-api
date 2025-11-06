@@ -4,8 +4,10 @@ import initDB from './src/config/db.js';
 import morgan from 'morgan';
 import { PORT, NODE_ENV, CLIENT_URL } from './src/config/config.js';
 import cors from 'cors';
-
-initDB();
+import swaggerUi from 'swagger-ui-express';
+import pkg from 'fs-extra';
+const { readFile } = pkg;
+import swaggerUiDist from 'swagger-ui-dist';
 
 import AppError from './src/utils/AppError.js';
 import productRouter from './src/routes/product.routes.js';
@@ -17,17 +19,16 @@ import stripeWebhookRoute from './src/routes/stripeWebhookRoute.js';
 import globalErrorHandler from './src/utils/globalErrorHandler.js';
 import cartRoutes from './src/routes/cart.routes.js';
 import statisticsRoutes from './src/routes/statistics.routes.js';
-import swaggerUi from 'swagger-ui-express';
-import pkg from 'fs-extra';
-const { readFile } = pkg;
+
+initDB();
 
 const swaggerDocument = JSON.parse(
     await readFile(new URL('./swagger/swagger.json', import.meta.url))
 );
 
 const app = express();
-// keep this route here before express.json Stripe requires the raw body to verify the signature.
 
+// Keep this before express.json() for Stripe
 app.use('/api/stripe', stripeWebhookRoute);
 
 app.set('query parser', 'extended');
@@ -50,7 +51,23 @@ if (NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const swaggerAssetsPath = swaggerUiDist.getAbsoluteFSPath();
+app.use('/api-docs-assets', express.static(swaggerAssetsPath));
+
+app.use(
+    '/api-docs',
+    swaggerUi.serveFiles(swaggerDocument, {
+        swaggerOptions: {
+            spec: swaggerDocument,
+        },
+        customCssUrl: '/api-docs-assets/swagger-ui.css',
+        customJs: [
+            '/api-docs-assets/swagger-ui-bundle.js',
+            '/api-docs-assets/swagger-ui-standalone-preset.js',
+        ],
+    }),
+    swaggerUi.setup(swaggerDocument)
+);
 
 app.use('/api/products', productRouter);
 app.use('/api/auth', authRoutes);
@@ -68,4 +85,5 @@ app.use(globalErrorHandler);
 app.listen(PORT, () => {
     console.log(`app is running on port ${PORT}`);
 });
+
 export default app;
