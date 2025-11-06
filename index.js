@@ -56,17 +56,14 @@ app.use('/api-docs-assets', express.static(swaggerAssetsPath));
 
 app.use(
     '/api-docs',
-    swaggerUi.serveFiles(swaggerDocument, {
-        swaggerOptions: {
-            spec: swaggerDocument,
-        },
-        customCssUrl: '/api-docs-assets/swagger-ui.css',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument, {
+        customCssUrl: 'https://unpkg.com/swagger-ui-dist/swagger-ui.css',
         customJs: [
-            '/api-docs-assets/swagger-ui-bundle.js',
-            '/api-docs-assets/swagger-ui-standalone-preset.js',
+            'https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js',
+            'https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js',
         ],
-    }),
-    swaggerUi.setup(swaggerDocument)
+    })
 );
 
 app.use('/api/products', productRouter);
