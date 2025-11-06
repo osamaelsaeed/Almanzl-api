@@ -173,7 +173,7 @@ export const getUserOrdersPaginated = asyncHandler(async (req, res) => {
     const limit = Number(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     const userId = req.id;
-    const totalOrders = await Order.countDocuments();
+    const totalOrders = await Order.countDocuments({ userId });
     const orders = await Order.find({ userId: userId })
         .populate('userId', 'name email')
         .populate('orderItems.productId', 'name price')
