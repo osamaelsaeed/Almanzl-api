@@ -5,7 +5,7 @@
             "src": "index.js",
             "use": "@vercel/node",
             "config": {
-                "includeFiles": ["swagger/swagger.json", "node_modules/swagger-ui-dist/**"]
+                "includeFiles": ["swagger/swagger.json", "./node_modules/swagger-ui-dist/**"]
             }
         }
     ],
