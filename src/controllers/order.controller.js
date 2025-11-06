@@ -168,6 +168,29 @@ export const getAllOrdersPaginated = asyncHandler(async (req, res) => {
     });
 });
 
+export const getUserOrdersPaginated = asyncHandler(async (req, res) => {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const userId = req.id;
+    const totalOrders = await Order.countDocuments();
+    const orders = await Order.find({ userId: userId })
+        .populate('userId', 'name email')
+        .populate('orderItems.productId', 'name price')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+    res.status(200).json({
+        success: true,
+        message: 'Orders fetched successfully',
+        page,
+        totalPages: Math.ceil(totalOrders / limit),
+        totalOrders,
+        data: orders,
+    });
+});
+
 // @desc   Get specific order by ID
 // @route  GET /api/orders/:id
 // @access Private (Admin or Order Owner)
