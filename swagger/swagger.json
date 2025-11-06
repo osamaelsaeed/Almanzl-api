@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "https://almanzl.vercel.app/api",
+      "url": "/api",
       "description": "Production server"
     },
     {
