@@ -19,7 +19,7 @@
             },
             "favorites": {
                 "type": "array",
-                "items": { "$ref": "#/definitions/Product" }
+                "items": { "$ref": "#/components/schemas/Product" }
             },
             "cart": {
                 "type": "array",
@@ -34,8 +34,16 @@
                     }
                 }
             },
-            "createdAt": { "type": "string", "example": "2025-11-03T12:00:00Z" },
-            "updatedAt": { "type": "string", "example": "2025-11-03T13:00:00Z" }
+            "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-11-03T12:00:00Z"
+            },
+            "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-11-03T13:00:00Z"
+            }
         }
     }
 }

@@ -1,0 +1,44 @@
+{
+    "Category": {
+        "type": "object",
+        "required": ["name", "icon"],
+        "properties": {
+            "_id": {
+                "type": "string",
+                "example": "6730d0a1b5e1d3f1b8e01a4b"
+            },
+            "name": {
+                "type": "string",
+                "example": "Furniture"
+            },
+            "description": {
+                "type": "string",
+                "example": "Home and office furniture collection"
+            },
+            "icon": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "example": "https://cdn.domain.com/icons/furniture.png"
+                    },
+                    "public_id": {
+                        "type": "string",
+                        "example": "furniture_icon_123"
+                    }
+                }
+            },
+            "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-11-03T12:00:00Z"
+            },
+            "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-11-03T12:30:00Z"
+            }
+        },
+        "description": "Represents a product category with name, description, and icon."
+    }
+}

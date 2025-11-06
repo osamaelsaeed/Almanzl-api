@@ -2,31 +2,51 @@
     "/auth/{id}": {
         "get": {
             "tags": ["Auth"],
-            "summary": "Get logged-in user's profile",
-            "description": "Fetches the profile information of the authenticated user.",
+            "summary": "Get user profile by ID",
+            "description": "Fetches the profile information of the authenticated user by ID.",
             "operationId": "getUserProfile",
-            "produces": ["application/json"],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": { "type": "string" },
+                    "description": "User ID"
+                }
+            ],
+            "security": [{ "bearerAuth": [] }],
             "responses": {
                 "200": {
                     "description": "User profile fetched successfully",
-                    "schema": { "$ref": "#/definitions/User" }
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/User" }
+                        }
+                    }
                 },
-                "401": { "description": "Unauthorized" }
+                "401": { "description": "Unauthorized" },
+                "404": { "description": "User not found" }
             }
         },
-
         "delete": {
             "tags": ["Admin"],
             "summary": "Delete a user (admin only)",
             "description": "Deletes a user account by ID. Admin-only endpoint.",
             "operationId": "deleteUser",
             "parameters": [
-                { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": { "type": "string" },
+                    "description": "User ID"
+                }
             ],
+            "security": [{ "bearerAuth": [] }],
             "responses": {
                 "200": { "description": "User deleted successfully" },
-                "404": { "description": "User not found" },
-                "403": { "description": "Forbidden - Admin access only" }
+                "403": { "description": "Forbidden - Admin access only" },
+                "404": { "description": "User not found" }
             }
         }
     }

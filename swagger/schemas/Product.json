@@ -1,0 +1,53 @@
+{
+    "Product": {
+        "type": "object",
+        "required": ["name", "description", "price", "category"],
+        "properties": {
+            "_id": {
+                "type": "string",
+                "example": "6728e5a9c1d9a5aefc61d6aa"
+            },
+            "name": {
+                "type": "string",
+                "example": "Modern Wooden Table"
+            },
+            "description": {
+                "type": "string",
+                "example": "A beautifully crafted modern wooden dining table."
+            },
+            "price": {
+                "type": "number",
+                "example": 2500.0
+            },
+            "images": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "public_id": { "type": "string", "example": "abc123" },
+                        "url": {
+                            "type": "string",
+                            "example": "https://cdn.domain.com/images/table.jpg"
+                        }
+                    }
+                }
+            },
+            "stock": { "type": "integer", "example": 25 },
+            "category": { "type": "string", "example": "64e5b0f6c2a7e3a0f1234567" },
+            "ratingsAverage": { "type": "number", "example": 4.5 },
+            "ratingsQuantity": { "type": "integer", "example": 100 },
+            "favoritesCount": { "type": "integer", "example": 50 },
+            "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-11-05T09:00:00Z"
+            },
+            "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-11-05T10:00:00Z"
+            }
+        },
+        "description": "Represents a product available for sale with images, price, and ratings."
+    }
+}

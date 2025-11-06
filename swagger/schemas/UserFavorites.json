@@ -1,0 +1,14 @@
+{
+    "UserFavorites": {
+        "type": "object",
+        "properties": {
+            "favorites": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Product"
+                }
+            }
+        },
+        "description": "List of products that the user has marked as favorites."
+    }
+}

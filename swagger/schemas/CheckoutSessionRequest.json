@@ -1,0 +1,14 @@
+{
+    "CheckoutSessionRequest": {
+        "type": "object",
+        "required": ["orderId"],
+        "properties": {
+            "orderId": {
+                "type": "string",
+                "example": "6730e5a9c1d9a5aefc61d6bb",
+                "description": "ID of the order for which to create a Stripe checkout session."
+            }
+        },
+        "description": "Request body to create a Stripe checkout session."
+    }
+}

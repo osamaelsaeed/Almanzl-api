@@ -1,36 +1,51 @@
 {
     "/orders": {
         "get": {
-            "tags": ["Order"],
-            "summary": "Get all orders (protected)",
+            "tags": ["Orders"],
+            "summary": "Get all orders for the logged-in user",
+            "description": "Retrieves all orders associated with the authenticated user.",
+            "operationId": "getAllOrders",
             "security": [{ "bearerAuth": [] }],
             "responses": {
                 "200": {
-                    "description": "List of orders",
-                    "schema": {
-                        "type": "array",
-                        "items": { "$ref": "#/definitions/Order" }
+                    "description": "Orders retrieved successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": { "$ref": "#/components/schemas/Order" }
+                            }
+                        }
                     }
-                }
+                },
+                "401": { "description": "Unauthorized" }
             }
         },
         "post": {
-            "tags": ["Order"],
+            "tags": ["Orders"],
             "summary": "Create a new order",
+            "description": "Creates a new order for the authenticated user using cash payment.",
+            "operationId": "createOrder",
             "security": [{ "bearerAuth": [] }],
-            "parameters": [
-                {
-                    "name": "body",
-                    "in": "body",
-                    "required": true,
-                    "schema": { "$ref": "#/definitions/Order" }
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": { "$ref": "#/components/schemas/OrderCreate" }
+                    }
                 }
-            ],
+            },
             "responses": {
                 "201": {
                     "description": "Order created successfully",
-                    "schema": { "$ref": "#/definitions/Order" }
-                }
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/Order" }
+                        }
+                    }
+                },
+                "400": { "description": "Invalid input data" },
+                "401": { "description": "Unauthorized" }
             }
         }
     }

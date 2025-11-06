@@ -1,0 +1,27 @@
+{
+    "SignupRequest": {
+        "type": "object",
+        "required": ["name", "email", "password", "phone"],
+        "properties": {
+            "name": {
+                "type": "string",
+                "example": "John Doe"
+            },
+            "email": {
+                "type": "string",
+                "format": "email",
+                "example": "john@example.com"
+            },
+            "password": {
+                "type": "string",
+                "format": "password",
+                "example": "StrongP@ss123"
+            },
+            "phone": {
+                "type": "string",
+                "example": "+201234567890"
+            }
+        },
+        "description": "Data required to register a new user."
+    }
+}

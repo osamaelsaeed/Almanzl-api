@@ -2,18 +2,24 @@
     "/auth/get-all-users": {
         "get": {
             "tags": ["Admin"],
-            "summary": "Get all users (admin only)",
-            "description": "Returns a list of all registered users. Accessible by admins only.",
+            "summary": "Get all users (Admin only)",
+            "description": "Retrieves a list of all registered users. Accessible only to admin users.",
             "operationId": "getAllUsers",
+            "security": [{ "bearerAuth": [] }],
             "responses": {
                 "200": {
-                    "description": "List of users",
-                    "schema": {
-                        "type": "array",
-                        "items": { "$ref": "#/definitions/User" }
+                    "description": "List of users retrieved successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": { "$ref": "#/components/schemas/User" }
+                            }
+                        }
                     }
                 },
-                "403": { "description": "Forbidden - Admin access only" }
+                "401": { "description": "Unauthorized" },
+                "403": { "description": "Forbidden – Admin access required" }
             }
         }
     }

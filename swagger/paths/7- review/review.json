@@ -1,0 +1,105 @@
+{
+    "/products/{id}/reviews": {
+        "get": {
+            "tags": ["Review"],
+            "summary": "Get all reviews for a product",
+            "description": "Retrieve all reviews for a specific product using its ID.",
+            "operationId": "getAllReviewsForProduct",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": { "type": "string" },
+                    "description": "Product ID for which to fetch reviews"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "List of reviews for the specified product",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": { "$ref": "#/components/schemas/Review" }
+                            },
+                            "example": [
+                                {
+                                    "_id": "6740f6a8e1b0a8b7b2f7d12a",
+                                    "rating": 5,
+                                    "review": "Amazing product!",
+                                    "createdAt": "2025-11-06T10:00:00Z",
+                                    "user": {
+                                        "_id": "6730e5a9c1d9a5aefc61d6aa",
+                                        "name": "John Doe",
+                                        "photo": "https://cdn.domain.com/users/john.jpg"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "404": { "description": "Product not found" }
+            }
+        },
+        "post": {
+            "tags": ["Review"],
+            "summary": "Create a new review for a product",
+            "description": "Creates a new review for a product. Requires user authentication.",
+            "operationId": "createReviewForProduct",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": { "type": "string" },
+                    "description": "Product ID to which the review belongs"
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "rating": { "type": "number", "example": 5 },
+                                "review": {
+                                    "type": "string",
+                                    "example": "Excellent quality and fast shipping!"
+                                }
+                            },
+                            "required": ["rating", "review"]
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Review created successfully",
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/Review" },
+                            "example": {
+                                "_id": "6740f6a8e1b0a8b7b2f7d12a",
+                                "rating": 5,
+                                "review": "Excellent quality and fast shipping!",
+                                "product": "6728e5a9c1d9a5aefc61d6bb",
+                                "user": {
+                                    "_id": "6730e5a9c1d9a5aefc61d6aa",
+                                    "name": "John Doe",
+                                    "photo": "https://cdn.domain.com/users/john.jpg"
+                                },
+                                "createdAt": "2025-11-06T12:00:00Z"
+                            }
+                        }
+                    }
+                },
+                "400": { "description": "Invalid input" },
+                "401": { "description": "Unauthorized" },
+                "404": { "description": "Product not found" }
+            }
+        }
+    }
+}

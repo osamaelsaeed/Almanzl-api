@@ -1,0 +1,75 @@
+{
+    "Order": {
+        "type": "object",
+        "properties": {
+            "_id": {
+                "type": "string",
+                "example": "6730e5a9c1d9a5aefc61d6bb"
+            },
+            "userId": {
+                "type": "string",
+                "example": "6728e5a9c1d9a5aefc61d6aa",
+                "description": "The ID of the user who placed the order."
+            },
+            "paymentMethod": {
+                "type": "string",
+                "enum": ["cash", "stripe"],
+                "example": "stripe"
+            },
+            "orderItems": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "productId": { "type": "string", "example": "6728e5a9c1d9a5aefc61d6aa" },
+                        "name": { "type": "string", "example": "Modern Wooden Table" },
+                        "price": { "type": "number", "example": 2500.0 },
+                        "image": {
+                            "type": "string",
+                            "example": "https://cdn.domain.com/images/table.jpg"
+                        },
+                        "quantity": { "type": "integer", "example": 2 },
+                        "stock": { "type": "integer", "example": 8 }
+                    },
+                    "required": ["productId", "name", "price", "image", "stock", "quantity"]
+                }
+            },
+            "shippingAddress": {
+                "type": "object",
+                "properties": {
+                    "address": { "type": "string", "example": "123 Main Street" },
+                    "city": { "type": "string", "example": "Cairo" },
+                    "postalCode": { "type": "string", "example": "12345" },
+                    "country": { "type": "string", "example": "Egypt" }
+                },
+                "required": ["address", "city", "country"]
+            },
+            "itemsPrice": { "type": "number", "example": 5000.0 },
+            "shippingPrice": { "type": "number", "example": 150.0 },
+            "discountAmount": { "type": "number", "example": 100.0 },
+            "totalPrice": { "type": "number", "example": 5050.0 },
+            "isPaid": { "type": "boolean", "example": true },
+            "paidAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-11-05T10:00:00Z"
+            },
+            "status": {
+                "type": "string",
+                "enum": ["pending", "confirmed", "cancelled"],
+                "example": "confirmed"
+            },
+            "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-11-05T09:00:00Z"
+            },
+            "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-11-05T11:00:00Z"
+            }
+        },
+        "description": "Represents an order placed by a user with products, totals, and payment details."
+    }
+}

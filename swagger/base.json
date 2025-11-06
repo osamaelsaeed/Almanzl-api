@@ -1,39 +1,45 @@
 {
-    "swagger": "2.0",
+    "openapi": "3.0.3",
     "info": {
-        "title": "Almanzl api",
-        "description": "Nodejs Advanced Course API Documentation",
+        "title": "Almanzl API",
+        "description": "API documentation for Almanzl application",
         "version": "1.0.0",
-        "licenses": {
+        "license": {
             "name": "MIT",
             "url": "https://opensource.org/licenses/MIT"
         }
     },
-    "host": "almanzl.vercel.app",
-    "basePath": "/api/",
+    "servers": [
+        {
+            "url": "https://almanzl.vercel.app/api",
+            "description": "Production server"
+        },
+        {
+            "url": "http://localhost:3000/api",
+            "description": "Development server"
+        }
+    ],
     "tags": [
         {
             "name": "Almanzl",
             "description": "Almanzl API Documentation"
         }
     ],
-    "schemes": ["https"],
-    "consumes": ["application/json"],
-    "produces": ["application/json"],
-    "securityDefinitions": {
-        "bearerAuth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header",
-            "description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
-        }
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "Enter your bearer token in the format **Bearer <token>**"
+            }
+        },
+        "schemas": {}
     },
-
     "security": [
         {
             "bearerAuth": []
         }
     ],
-    "paths": {},
-    "definitions": {}
+    "paths": {}
 }

@@ -3,33 +3,56 @@
         "get": {
             "tags": ["Cart"],
             "summary": "Get current user's cart",
+            "description": "Returns the cart items for the authenticated user.",
+            "operationId": "getCart",
             "security": [{ "bearerAuth": [] }],
             "responses": {
                 "200": {
                     "description": "User's cart retrieved",
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "cart": { "$ref": "#/definitions/Cart" }
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "cart": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "productId": { "type": "string" },
+                                                "name": { "type": "string" },
+                                                "price": { "type": "number" },
+                                                "image": { "type": "string" },
+                                                "quantity": { "type": "integer" }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-                }
+                },
+                "401": { "description": "Unauthorized" }
             }
         },
         "post": {
             "tags": ["Cart"],
             "summary": "Update current user's cart",
+            "description": "Replace the authenticated user's cart with the provided items.",
+            "operationId": "updateCart",
             "security": [{ "bearerAuth": [] }],
-            "parameters": [
-                {
-                    "name": "body",
-                    "in": "body",
-                    "required": true,
-                    "schema": { "$ref": "#/definitions/Cart" }
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": { "$ref": "#/components/schemas/Cart" }
+                    }
                 }
-            ],
+            },
             "responses": {
-                "201": { "description": "Cart updated successfully" }
+                "201": { "description": "Cart updated successfully" },
+                "400": { "description": "Invalid input" },
+                "401": { "description": "Unauthorized" }
             }
         }
     }
