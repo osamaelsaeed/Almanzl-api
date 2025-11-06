@@ -19,14 +19,11 @@ import cartRoutes from './src/routes/cart.routes.js';
 import statisticsRoutes from './src/routes/statistics.routes.js';
 import swaggerUi from 'swagger-ui-express';
 import pkg from 'fs-extra';
-import swaggerJSDoc from 'swagger-jsdoc';
 const { readFile } = pkg;
 
 const swaggerDocument = JSON.parse(
     await readFile(new URL('./swagger/swagger.json', import.meta.url))
 );
-
-const swaggerSpec = swaggerJSDoc({ definition: swaggerDocument, apis: [] });
 
 const app = express();
 // keep this route here before express.json Stripe requires the raw body to verify the signature.
@@ -53,21 +50,53 @@ if (NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
-const CSS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css';
+// Serve a small custom Swagger UI HTML that uses CDN assets. This avoids serving
+// local swagger-ui JS files which can be rewritten by some hosts (like Vercel)
+// and return HTML instead of JS (causing `Unexpected token '<'`).
+const SWAGGER_CSS = 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui.min.css';
+const SWAGGER_BUNDLE =
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui-bundle.min.js';
+const SWAGGER_STANDALONE =
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui-standalone-preset.min.js';
 
-app.use(
-    '/api-docs',
-    swaggerUi.serve,
-    swaggerUi.setup(swaggerSpec, {
-        customCss:
-            '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
-        customCssUrl: CSS_URL,
-    })
-);
+app.get('/api-docs', (req, res) => {
+    // Use a relative URL so the browser requests the JSON from the same origin/path
+    const swaggerUrl = '/swagger.json';
+    const customCss =
+        '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }';
+    res.setHeader('Content-Type', 'text/html');
+    res.send(`<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>API Docs</title>
+        <link rel="stylesheet" href="${SWAGGER_CSS}" />
+        <style>${customCss}</style>
+    </head>
+    <body>
+        <div id="swagger-ui"></div>
+        <script src="${SWAGGER_BUNDLE}"></script>
+        <script src="${SWAGGER_STANDALONE}"></script>
+        <script>
+            window.onload = function() {
+                const ui = SwaggerUIBundle({
+                    url: '${swaggerUrl}',
+                    dom_id: '#swagger-ui',
+                    deepLinking: true,
+                    presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+                    layout: 'BaseLayout'
+                });
+                window.ui = ui;
+            };
+        </script>
+    </body>
+</html>`);
+});
 
 app.get('/swagger.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
-    res.send(swaggerSpec);
+    res.send(swaggerDocument);
 });
 
 app.use('/api/products', productRouter);
