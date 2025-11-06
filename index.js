@@ -21,6 +21,11 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerUiDist from 'swagger-ui-dist';
 import pkg from 'fs-extra';
 const { readFile } = pkg;
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const swaggerDocument = JSON.parse(
     await readFile(new URL('./swagger/swagger.json', import.meta.url))
