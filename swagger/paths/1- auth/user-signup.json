@@ -1,0 +1,27 @@
+{
+    "/auth/signup": {
+        "post": {
+            "tags": ["Auth"],
+            "summary": "Register a new user",
+            "description": "Registers a new user with name, email, password, and phone.",
+            "operationId": "signupUser",
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "body",
+                    "required": true,
+                    "schema": { "$ref": "#/definitions/SignupRequest" }
+                }
+            ],
+            "responses": {
+                "201": {
+                    "description": "User created successfully",
+                    "schema": { "$ref": "#/definitions/User" }
+                },
+                "400": {
+                    "description": "Validation error"
+                }
+            }
+        }
+    }
+}

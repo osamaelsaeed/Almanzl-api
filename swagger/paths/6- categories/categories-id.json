@@ -1,0 +1,40 @@
+{
+    "/categories/{id}": {
+        "get": {
+            "tags": ["Category"],
+            "summary": "Get category by ID",
+            "parameters": [{ "name": "id", "in": "path", "required": true, "type": "string" }],
+            "responses": {
+                "200": {
+                    "description": "Category retrieved",
+                    "schema": { "$ref": "#/definitions/Category" }
+                }
+            }
+        },
+        "put": {
+            "tags": ["Category"],
+            "summary": "Update category by ID (admin only)",
+            "parameters": [
+                { "name": "id", "in": "path", "required": true, "type": "string" },
+                {
+                    "name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": { "$ref": "#/definitions/Category" }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Category updated successfully",
+                    "schema": { "$ref": "#/definitions/Category" }
+                }
+            }
+        },
+        "delete": {
+            "tags": ["Category"],
+            "summary": "Delete category by ID (admin only)",
+            "parameters": [{ "name": "id", "in": "path", "required": true, "type": "string" }],
+            "responses": { "200": { "description": "Category deleted successfully" } }
+        }
+    }
+}

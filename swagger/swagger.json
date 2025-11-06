@@ -1,0 +1,1894 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Almanzl api",
+    "description": "Nodejs Advanced Course API Documentation",
+    "version": "1.0.0",
+    "licenses": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "almanzl.vercel.app",
+  "basePath": "/api/",
+  "tags": [
+    {
+      "name": "Almanzl",
+      "description": "Almanzl API Documentation"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/get-all-users": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Get all users (admin only)",
+        "description": "Returns a list of all registered users. Accessible by admins only.",
+        "operationId": "getAllUsers",
+        "responses": {
+          "200": {
+            "description": "List of users",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Admin access only"
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Request password reset",
+        "description": "Sends a password reset email with a token.",
+        "operationId": "forgotPassword",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "email"
+              ],
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "john@example.com"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password reset email sent successfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login an existing user",
+        "description": "Logs in a user and returns a JWT token with profile data.",
+        "operationId": "loginUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOi..."
+                    },
+                    "user": {
+                      "$ref": "#/definitions/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/auth/{id}": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get logged-in user's profile",
+        "description": "Fetches the profile information of the authenticated user.",
+        "operationId": "getUserProfile",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile fetched successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Delete a user (admin only)",
+        "description": "Deletes a user account by ID. Admin-only endpoint.",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully"
+          },
+          "403": {
+            "description": "Forbidden - Admin access only"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Reset user password",
+        "description": "Resets the user's password using a valid reset token.",
+        "operationId": "resetPassword",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ResetPasswordRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password reset successful"
+          },
+          "400": {
+            "description": "Invalid or expired token"
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register a new user",
+        "description": "Registers a new user with name, email, password, and phone.",
+        "operationId": "signupUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SignupRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/user/favorites/{productId}": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Add product to favorites",
+        "description": "Adds a product to the user's favorites list.",
+        "operationId": "addFavorite",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product added to favorites"
+          },
+          "400": {
+            "description": "Product already in favorites"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Remove product from favorites",
+        "description": "Removes a product from the user's favorites list.",
+        "operationId": "removeFavorite",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product removed from favorites"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Product not found in favorites"
+          }
+        }
+      }
+    },
+    "/products/category/{categoryId}": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Get products by category ID",
+        "description": "Retrieve all furniture products that belong to a specific category",
+        "operationId": "getProductsByCategoryId",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Category ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of products in the selected category",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Product"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid category ID"
+          },
+          "404": {
+            "description": "No products found for this category"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Get a product by ID",
+        "description": "Retrieve details of a furniture product by its unique ID",
+        "operationId": "getProductById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Product ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product found",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          },
+          "404": {
+            "description": "Product not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Update a product by ID",
+        "description": "Modify details of an existing furniture product",
+        "operationId": "updateProduct",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Product ID"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product updated successfully"
+          },
+          "400": {
+            "description": "Invalid data"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Delete a product by ID",
+        "description": "Remove a furniture product from the store by ID",
+        "operationId": "deleteProduct",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Product ID"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product deleted successfully"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      }
+    },
+    "/products/similar/{id}": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Get similar products",
+        "description": "Retrieve furniture products that are similar to the given product (e.g., same category or style)",
+        "operationId": "getSimilarProducts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Product ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of similar products",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Product"
+              }
+            }
+          },
+          "404": {
+            "description": "Product not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/products/": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Get all products",
+        "description": "Retrieve all furniture products available in the store",
+        "operationId": "getProducts",
+        "responses": {
+          "200": {
+            "description": "A list of products",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Product"
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Add a new product (with image upload)",
+        "description": "Create a new furniture product by uploading images and providing its details. Images are uploaded to Cloudinary automatically.",
+        "operationId": "addProduct",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "description": "Name of the furniture product",
+            "example": "Modern Wooden Chair"
+          },
+          {
+            "name": "description",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "description": "Detailed description of the product",
+            "example": "Handcrafted wooden chair with modern design."
+          },
+          {
+            "name": "price",
+            "in": "formData",
+            "type": "number",
+            "required": true,
+            "description": "Price of the furniture product",
+            "example": 1200
+          },
+          {
+            "name": "stock",
+            "in": "formData",
+            "type": "integer",
+            "required": true,
+            "description": "Available stock quantity",
+            "example": 10
+          },
+          {
+            "name": "category",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "description": "MongoDB ObjectId of the category this product belongs to",
+            "example": "64e5b0f6c2a7e3a0f1234567"
+          },
+          {
+            "name": "images",
+            "in": "formData",
+            "type": "file",
+            "required": true,
+            "description": "Product images (upload one or more images)",
+            "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Product created successfully",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          },
+          "400": {
+            "description": "Invalid input or missing images"
+          },
+          "415": {
+            "description": "Only image files are allowed"
+          }
+        }
+      }
+    },
+    "/orders/create-order-cash": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Create cash order",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Cash order created"
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Get order by ID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order retrieved",
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Update order status (admin only)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "confirmed",
+                    "cancelled"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order status updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Delete an order (admin only)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Order deleted successfully"
+          }
+        }
+      }
+    },
+    "/orders/{id}/pay": {
+      "put": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Update order payment status",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order payment status updated"
+          }
+        }
+      }
+    },
+    "/orders/get-paginated-orders": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Get paginated orders",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of orders",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Order"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/create-checkout-session": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Create Stripe checkout session",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Stripe session created"
+          }
+        }
+      }
+    },
+    "/orders/session/{id}": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retrieve Stripe session",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stripe session retrieved"
+          }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Get all orders (protected)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of orders",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Order"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Create a new order",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Order created successfully",
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        }
+      }
+    },
+    "/cart": {
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Get current user's cart",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User's cart retrieved",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "cart": {
+                  "$ref": "#/definitions/Cart"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Update current user's cart",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Cart"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Cart updated successfully"
+          }
+        }
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Get category by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category retrieved",
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Update category by ID (admin only)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Delete category by ID (admin only)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category deleted successfully"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Get all categories",
+        "responses": {
+          "200": {
+            "description": "List of categories",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Category"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Create a new category (admin only)",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Category created successfully",
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          }
+        }
+      }
+    },
+    "/reviews": {
+      "get": {
+        "tags": [
+          "Review"
+        ],
+        "summary": "Get all reviews",
+        "responses": {
+          "200": {
+            "description": "List of reviews",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Review"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Review"
+        ],
+        "summary": "Create a new review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Review"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Review created successfully",
+            "schema": {
+              "$ref": "#/definitions/Review"
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{id}": {
+      "patch": {
+        "tags": [
+          "Review"
+        ],
+        "summary": "Update a review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Review"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Review"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Review"
+        ],
+        "summary": "Delete a review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Review deleted successfully"
+          }
+        }
+      }
+    },
+    "/statistics/overview": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "summary": "Get overview of total orders, revenue, users, and products",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Overview data",
+            "schema": {
+              "$ref": "#/definitions/StatisticsOverview"
+            }
+          }
+        }
+      }
+    },
+    "/statistics/sales-performance": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "summary": "Get sales performance over time",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sales performance data",
+            "schema": {
+              "$ref": "#/definitions/SalesPerformance"
+            }
+          }
+        }
+      }
+    },
+    "/statistics/top-products": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "summary": "Get top selling products",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Top products",
+            "schema": {
+              "$ref": "#/definitions/TopProducts"
+            }
+          }
+        }
+      }
+    },
+    "/statistics/sales-by-category": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "summary": "Get revenue grouped by category",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Revenue by category",
+            "schema": {
+              "$ref": "#/definitions/SalesByCategory"
+            }
+          }
+        }
+      }
+    },
+    "/statistics/sales-by-governorate": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "summary": "Get revenue grouped by governorate",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Revenue by governorate",
+            "schema": {
+              "$ref": "#/definitions/SalesByGovernorate"
+            }
+          }
+        }
+      }
+    },
+    "/statistics/orders-status": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "summary": "Get counts of orders by status",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order status counts",
+            "schema": {
+              "$ref": "#/definitions/OrderStatusCounts"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CartItem": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "example": "64f5c3b2a5f1c2b3e1d6f7b0"
+        },
+        "name": {
+          "type": "string",
+          "example": "Modern Wooden Table"
+        },
+        "price": {
+          "type": "number",
+          "example": 2500
+        },
+        "quantity": {
+          "type": "integer",
+          "example": 2
+        },
+        "image": {
+          "type": "string",
+          "example": "https://example.com/image.jpg"
+        }
+      },
+      "required": [
+        "productId",
+        "name",
+        "price",
+        "quantity"
+      ]
+    },
+    "Cart": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CartItem"
+      }
+    },
+    "Category": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "example": "64f5c3b2a5f1c2b3e1d6f7d1"
+        },
+        "name": {
+          "type": "string",
+          "example": "Electronics"
+        },
+        "description": {
+          "type": "string",
+          "example": "All electronic items"
+        },
+        "icon": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "example": "https://example.com/icon.jpg"
+            },
+            "public_id": {
+              "type": "string",
+              "example": "icon123"
+            }
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "name",
+        "icon"
+      ]
+    },
+    "LoginRequest": {
+      "type": "object",
+      "required": [
+        "email",
+        "password"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "john@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "StrongP@ss123"
+        }
+      }
+    },
+    "Order": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "example": "64f5c3b2a5f1c2b3e1d6f7c1"
+        },
+        "userId": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            }
+          }
+        },
+        "paymentMethod": {
+          "type": "string",
+          "enum": [
+            "cash",
+            "stripe"
+          ],
+          "example": "stripe"
+        },
+        "orderItems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "productId": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "public_id": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "category": {
+                    "type": "string"
+                  }
+                }
+              },
+              "name": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "image": {
+                "type": "string"
+              },
+              "quantity": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "shippingAddress": {
+          "type": "object",
+          "properties": {
+            "address": {
+              "type": "string"
+            },
+            "city": {
+              "type": "string"
+            },
+            "postalCode": {
+              "type": "string"
+            },
+            "country": {
+              "type": "string"
+            }
+          }
+        },
+        "itemsPrice": {
+          "type": "number"
+        },
+        "shippingPrice": {
+          "type": "number"
+        },
+        "discountAmount": {
+          "type": "number",
+          "example": 0
+        },
+        "totalPrice": {
+          "type": "number"
+        },
+        "isPaid": {
+          "type": "boolean",
+          "example": false
+        },
+        "paidAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "confirmed",
+            "cancelled"
+          ],
+          "example": "pending"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "userId",
+        "paymentMethod",
+        "orderItems",
+        "shippingAddress",
+        "itemsPrice",
+        "shippingPrice",
+        "totalPrice",
+        "status"
+      ]
+    },
+    "Product": {
+      "required": [
+        "name",
+        "description",
+        "price",
+        "category"
+      ],
+      "tags": [
+        "Review"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Modern Wooden Table"
+        },
+        "description": {
+          "type": "string",
+          "example": "A beautifully crafted modern wooden dining table."
+        },
+        "price": {
+          "type": "number",
+          "example": 2500
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "public_id": {
+                "type": "string",
+                "example": "abc123"
+              },
+              "url": {
+                "type": "string",
+                "example": "https://example.com/image.jpg"
+              }
+            }
+          }
+        },
+        "stock": {
+          "type": "integer",
+          "example": 25
+        },
+        "category": {
+          "type": "string",
+          "example": "64e5b0f6c2a7e3a0f1234567"
+        },
+        "ratingsAverage": {
+          "type": "number",
+          "example": 4.5
+        },
+        "ratingsQuantity": {
+          "type": "integer",
+          "example": 100
+        },
+        "favoritesCount": {
+          "type": "integer",
+          "example": 50
+        }
+      }
+    },
+    "ResetPasswordRequest": {
+      "type": "object",
+      "required": [
+        "token",
+        "newPassword"
+      ],
+      "properties": {
+        "token": {
+          "type": "string",
+          "example": "eyJhbGciOi..."
+        },
+        "newPassword": {
+          "type": "string",
+          "example": "NewStrongP@ss123"
+        }
+      }
+    },
+    "Review": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "example": "64f5c3b2a5f1c2b3e1d6f7a8"
+        },
+        "rating": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5,
+          "example": 4
+        },
+        "review": {
+          "type": "string",
+          "example": "Great product!"
+        },
+        "product": {
+          "type": "string",
+          "example": "64f5c3b2a5f1c2b3e1d6f7b0"
+        },
+        "user": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "photo": {
+              "type": "string"
+            }
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "rating",
+        "review",
+        "product",
+        "user"
+      ]
+    },
+    "SignupRequest": {
+      "type": "object",
+      "required": [
+        "name",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "john@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "StrongP@ss123"
+        },
+        "phone": {
+          "type": "string",
+          "example": "+201234567890"
+        }
+      }
+    },
+    "StatisticsOverview": {
+      "type": "object",
+      "properties": {
+        "totalOrders": {
+          "type": "integer",
+          "example": 150
+        },
+        "totalRevenue": {
+          "type": "number",
+          "example": 45000
+        },
+        "totalUsers": {
+          "type": "integer",
+          "example": 120
+        },
+        "totalProducts": {
+          "type": "integer",
+          "example": 35
+        }
+      }
+    },
+    "SalesPerformance": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "example": "2025-11-01"
+          },
+          "revenue": {
+            "type": "number",
+            "example": 1500
+          },
+          "orders": {
+            "type": "integer",
+            "example": 10
+          }
+        }
+      }
+    },
+    "TopProducts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "example": "64f5c3b2a5f1c2b3e1d6f7b0"
+          },
+          "name": {
+            "type": "string",
+            "example": "Modern Wooden Table"
+          },
+          "unitsSold": {
+            "type": "integer",
+            "example": 50
+          },
+          "revenue": {
+            "type": "number",
+            "example": 25000
+          }
+        }
+      }
+    },
+    "SalesByCategory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "example": "64f5c3b2a5f1c2b3e1d6f7d1"
+          },
+          "name": {
+            "type": "string",
+            "example": "Electronics"
+          },
+          "revenue": {
+            "type": "number",
+            "example": 15000
+          }
+        }
+      }
+    },
+    "SalesByGovernorate": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "governorate": {
+            "type": "string",
+            "example": "Cairo"
+          },
+          "revenue": {
+            "type": "number",
+            "example": 20000
+          }
+        }
+      }
+    },
+    "OrderStatusCounts": {
+      "type": "object",
+      "properties": {
+        "pending": {
+          "type": "integer",
+          "example": 5
+        },
+        "confirmed": {
+          "type": "integer",
+          "example": 10
+        },
+        "cancelled": {
+          "type": "integer",
+          "example": 2
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "example": "6728e5a9c1d9a5aefc61d6aa"
+        },
+        "name": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "john@example.com"
+        },
+        "phone": {
+          "type": "string",
+          "example": "+201000000000"
+        },
+        "address": {
+          "type": "string",
+          "example": "123 Main Street"
+        },
+        "city": {
+          "type": "string",
+          "example": "Cairo"
+        },
+        "postalCode": {
+          "type": "string",
+          "example": "12345"
+        },
+        "country": {
+          "type": "string",
+          "example": "Egypt"
+        },
+        "avatar": {
+          "type": "string",
+          "example": "https://cdn.domain.com/avatar.jpg"
+        },
+        "isAdmin": {
+          "type": "boolean",
+          "example": false
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "local",
+            "google",
+            "github"
+          ],
+          "example": "local"
+        },
+        "favorites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Product"
+          }
+        },
+        "cart": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "productId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "image": {
+                "type": "string"
+              },
+              "quantity": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "2025-11-03T12:00:00Z"
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "2025-11-03T13:00:00Z"
+        }
+      }
+    },
+    "UserFavorites": {
+      "type": "object",
+      "properties": {
+        "favorites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Product"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+    "/categories": {
+        "get": {
+            "tags": ["Category"],
+            "summary": "Get all categories",
+            "responses": {
+                "200": {
+                    "description": "List of categories",
+                    "schema": {
+                        "type": "array",
+                        "items": { "$ref": "#/definitions/Category" }
+                    }
+                }
+            }
+        },
+        "post": {
+            "tags": ["Category"],
+            "summary": "Create a new category (admin only)",
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": { "$ref": "#/definitions/Category" }
+                }
+            ],
+            "responses": {
+                "201": {
+                    "description": "Category created successfully",
+                    "schema": { "$ref": "#/definitions/Category" }
+                }
+            }
+        }
+    }
+}

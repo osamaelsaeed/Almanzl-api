@@ -1,0 +1,80 @@
+{
+    "Order": {
+        "type": "object",
+        "properties": {
+            "_id": { "type": "string", "example": "64f5c3b2a5f1c2b3e1d6f7c1" },
+            "userId": {
+                "type": "object",
+                "properties": {
+                    "_id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "email": { "type": "string" }
+                }
+            },
+            "paymentMethod": { "type": "string", "enum": ["cash", "stripe"], "example": "stripe" },
+            "orderItems": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "productId": {
+                            "type": "object",
+                            "properties": {
+                                "_id": { "type": "string" },
+                                "name": { "type": "string" },
+                                "price": { "type": "number" },
+                                "images": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "public_id": { "type": "string" },
+                                            "url": { "type": "string" }
+                                        }
+                                    }
+                                },
+                                "category": { "type": "string" }
+                            }
+                        },
+                        "name": { "type": "string" },
+                        "price": { "type": "number" },
+                        "image": { "type": "string" },
+                        "quantity": { "type": "number" }
+                    }
+                }
+            },
+            "shippingAddress": {
+                "type": "object",
+                "properties": {
+                    "address": { "type": "string" },
+                    "city": { "type": "string" },
+                    "postalCode": { "type": "string" },
+                    "country": { "type": "string" }
+                }
+            },
+            "itemsPrice": { "type": "number" },
+            "shippingPrice": { "type": "number" },
+            "discountAmount": { "type": "number", "example": 0 },
+            "totalPrice": { "type": "number" },
+            "isPaid": { "type": "boolean", "example": false },
+            "paidAt": { "type": "string", "format": "date-time" },
+            "status": {
+                "type": "string",
+                "enum": ["pending", "confirmed", "cancelled"],
+                "example": "pending"
+            },
+            "createdAt": { "type": "string", "format": "date-time" },
+            "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": [
+            "userId",
+            "paymentMethod",
+            "orderItems",
+            "shippingAddress",
+            "itemsPrice",
+            "shippingPrice",
+            "totalPrice",
+            "status"
+        ]
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "/auth/{id}": {
+        "get": {
+            "tags": ["Auth"],
+            "summary": "Get logged-in user's profile",
+            "description": "Fetches the profile information of the authenticated user.",
+            "operationId": "getUserProfile",
+            "produces": ["application/json"],
+            "responses": {
+                "200": {
+                    "description": "User profile fetched successfully",
+                    "schema": { "$ref": "#/definitions/User" }
+                },
+                "401": { "description": "Unauthorized" }
+            }
+        },
+
+        "delete": {
+            "tags": ["Admin"],
+            "summary": "Delete a user (admin only)",
+            "description": "Deletes a user account by ID. Admin-only endpoint.",
+            "operationId": "deleteUser",
+            "parameters": [
+                { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+            ],
+            "responses": {
+                "200": { "description": "User deleted successfully" },
+                "404": { "description": "User not found" },
+                "403": { "description": "Forbidden - Admin access only" }
+            }
+        }
+    }
+}

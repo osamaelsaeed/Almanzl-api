@@ -1,0 +1,91 @@
+{
+    "/products/": {
+        "get": {
+            "tags": ["Product"],
+            "summary": "Get all products",
+            "description": "Retrieve all furniture products available in the store",
+            "operationId": "getProducts",
+            "responses": {
+                "200": {
+                    "description": "A list of products",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Product"
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Server error"
+                }
+            }
+        },
+        "post": {
+            "tags": ["Product"],
+            "summary": "Add a new product (with image upload)",
+            "description": "Create a new furniture product by uploading images and providing its details. Images are uploaded to Cloudinary automatically.",
+            "operationId": "addProduct",
+            "consumes": ["multipart/form-data"],
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "formData",
+                    "type": "string",
+                    "required": true,
+                    "description": "Name of the furniture product",
+                    "example": "Modern Wooden Chair"
+                },
+                {
+                    "name": "description",
+                    "in": "formData",
+                    "type": "string",
+                    "required": true,
+                    "description": "Detailed description of the product",
+                    "example": "Handcrafted wooden chair with modern design."
+                },
+                {
+                    "name": "price",
+                    "in": "formData",
+                    "type": "number",
+                    "required": true,
+                    "description": "Price of the furniture product",
+                    "example": 1200
+                },
+                {
+                    "name": "stock",
+                    "in": "formData",
+                    "type": "integer",
+                    "required": true,
+                    "description": "Available stock quantity",
+                    "example": 10
+                },
+                {
+                    "name": "category",
+                    "in": "formData",
+                    "type": "string",
+                    "required": true,
+                    "description": "MongoDB ObjectId of the category this product belongs to",
+                    "example": "64e5b0f6c2a7e3a0f1234567"
+                },
+                {
+                    "name": "images",
+                    "in": "formData",
+                    "type": "file",
+                    "required": true,
+                    "description": "Product images (upload one or more images)",
+                    "collectionFormat": "multi"
+                }
+            ],
+            "responses": {
+                "201": {
+                    "description": "Product created successfully",
+                    "schema": {
+                        "$ref": "#/definitions/Product"
+                    }
+                },
+                "400": { "description": "Invalid input or missing images" },
+                "415": { "description": "Only image files are allowed" }
+            }
+        }
+    }
+}

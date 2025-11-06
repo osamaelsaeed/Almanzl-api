@@ -1,0 +1,72 @@
+{
+    "/products/{id}": {
+        "get": {
+            "tags": ["Product"],
+            "summary": "Get a product by ID",
+            "description": "Retrieve details of a furniture product by its unique ID",
+            "operationId": "getProductById",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string",
+                    "description": "Product ID"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Product found",
+                    "schema": { "$ref": "#/definitions/Product" }
+                },
+                "404": { "description": "Product not found" },
+                "500": { "description": "Server error" }
+            }
+        },
+        "patch": {
+            "tags": ["Product"],
+            "summary": "Update a product by ID",
+            "description": "Modify details of an existing furniture product",
+            "operationId": "updateProduct",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string",
+                    "description": "Product ID"
+                },
+                {
+                    "in": "body",
+                    "name": "body",
+                    "required": true,
+                    "schema": { "$ref": "#/definitions/Product" }
+                }
+            ],
+            "responses": {
+                "200": { "description": "Product updated successfully" },
+                "404": { "description": "Product not found" },
+                "400": { "description": "Invalid data" }
+            }
+        },
+        "delete": {
+            "tags": ["Product"],
+            "summary": "Delete a product by ID",
+            "description": "Remove a furniture product from the store by ID",
+            "operationId": "deleteProduct",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string",
+                    "description": "Product ID"
+                }
+            ],
+            "responses": {
+                "204": { "description": "Product deleted successfully" },
+                "404": { "description": "Product not found" }
+            }
+        }
+    }
+}

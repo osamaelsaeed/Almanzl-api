@@ -1,0 +1,37 @@
+{
+    "/auth/login": {
+        "post": {
+            "tags": ["Auth"],
+            "summary": "Login an existing user",
+            "description": "Logs in a user and returns a JWT token with profile data.",
+            "operationId": "loginUser",
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "body",
+                    "required": true,
+                    "schema": { "$ref": "#/definitions/LoginRequest" }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Login successful",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "status": { "type": "string", "example": "success" },
+                            "data": {
+                                "type": "object",
+                                "properties": {
+                                    "token": { "type": "string", "example": "eyJhbGciOi..." },
+                                    "user": { "$ref": "#/definitions/User" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": { "description": "Invalid credentials" }
+            }
+        }
+    }
+}

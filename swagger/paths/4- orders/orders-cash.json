@@ -1,0 +1,20 @@
+{
+    "/orders/create-order-cash": {
+        "post": {
+            "tags": ["Order"],
+            "summary": "Create cash order",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": { "$ref": "#/definitions/Order" }
+                }
+            ],
+            "responses": {
+                "201": { "description": "Cash order created" }
+            }
+        }
+    }
+}

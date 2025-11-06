@@ -1,0 +1,20 @@
+{
+    "Category": {
+        "type": "object",
+        "properties": {
+            "_id": { "type": "string", "example": "64f5c3b2a5f1c2b3e1d6f7d1" },
+            "name": { "type": "string", "example": "Electronics" },
+            "description": { "type": "string", "example": "All electronic items" },
+            "icon": {
+                "type": "object",
+                "properties": {
+                    "url": { "type": "string", "example": "https://example.com/icon.jpg" },
+                    "public_id": { "type": "string", "example": "icon123" }
+                }
+            },
+            "createdAt": { "type": "string", "format": "date-time" },
+            "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["name", "icon"]
+    }
+}

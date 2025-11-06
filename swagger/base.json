@@ -1,0 +1,39 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Almanzl api",
+        "description": "Nodejs Advanced Course API Documentation",
+        "version": "1.0.0",
+        "licenses": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "host": "almanzl.vercel.app",
+    "basePath": "/api/",
+    "tags": [
+        {
+            "name": "Almanzl",
+            "description": "Almanzl API Documentation"
+        }
+    ],
+    "schemes": ["https"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "securityDefinitions": {
+        "bearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Enter your bearer token in the format **Bearer &lt;token&gt;**"
+        }
+    },
+
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
+    "paths": {},
+    "definitions": {}
+}

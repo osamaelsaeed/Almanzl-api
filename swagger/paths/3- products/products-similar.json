@@ -1,0 +1,30 @@
+{
+    "/products/similar/{id}": {
+        "get": {
+            "tags": ["Product"],
+            "summary": "Get similar products",
+            "description": "Retrieve furniture products that are similar to the given product (e.g., same category or style)",
+            "operationId": "getSimilarProducts",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string",
+                    "description": "Product ID"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "List of similar products",
+                    "schema": {
+                        "type": "array",
+                        "items": { "$ref": "#/definitions/Product" }
+                    }
+                },
+                "404": { "description": "Product not found" },
+                "500": { "description": "Server error" }
+            }
+        }
+    }
+}

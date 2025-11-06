@@ -59,10 +59,12 @@ const handleJWTExpiredError = () =>
 export default (err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || ERROR;
-    console.log(err);
     if (process.env.NODE_ENV === 'development') {
         sendErrorDev(err, res);
     } else if (process.env.NODE_ENV === 'production') {
+        console.log(
+            `=================This is the error================== ${err.code}=>${process.env.NODE_ENV}`
+        );
         // eslint-disable-next-line node/no-unsupported-features/es-syntax
         let error = { ...err, message: err.message };
 
@@ -70,6 +72,7 @@ export default (err, req, res, next) => {
         // err in mongoose doesn't have the property name but it inherits it from it's
         // prototype, so when we do (let error = {...err}) we got only the properties at err
         // you can do this too (let error = {...err, err.name})
+
         if (err.name === 'CastError') error = handleCastErrorDB(error);
         if (err.code === 11000) error = handleDuplicatedFieldDB(error);
         if (err.name === 'ValidationError') error = handleValidationErrorDB(error);
