@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import AppError from '../utils/AppError.js';
 import { sendEmail } from '../utils/email.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { CLIENT_URL } from '../config/config.js';
 
 export const protect = asyncHandler(async (req, res, next) => {
     const { authorization } = req.headers;
@@ -83,13 +84,34 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
     const resetToken = user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });
 
-    const resetURL = `${req.protocol}://${req.get('host')}/api/auth/resetPassword/${resetToken}`;
+    const resetURL = `${CLIENT_URL}/resetPassword/${resetToken}`;
 
-    const message = `
-    <p>Hi ${user.name || 'Dear User'},</p>
-    <p>You requested a password reset. Click the link below within 10 minutes:</p>
-    <p><a href="${resetURL}" target="_blank">${resetURL}</a></p>
-    <p>If you did not request this, please ignore this email.</p>
+    const html = `
+    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; padding: 30px;">
+      <div style="max-width: 500px; background-color: #ffffff; margin: auto; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden;">
+        <div style="background-color: #007BFF; color: white; text-align: center; padding: 20px;">
+          <h2 style="margin: 0;">Password Reset Request</h2>
+        </div>
+        <div style="padding: 25px; color: #333;">
+          <p style="font-size: 16px;">Hi ${user.name || 'there'},</p>
+          <p style="font-size: 15px;">We received a request to reset your password. You can set a new password by clicking the button below:</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${resetURL}" style="background-color: #232f3e; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+              Reset Password
+            </a>
+          </div>
+          <p style="font-size: 14px; color: #666;">
+            This link will expire in 10 minutes. If you did not request a password reset, please ignore this email.
+          </p>
+          <p style="margin-top: 25px; font-size: 13px; color: #999;">
+            Thanks,<br>The Support Team
+          </p>
+        </div>
+      </div>
+      <p style="text-align: center; font-size: 12px; color: #aaa; margin-top: 20px;">
+        © ${new Date().getFullYear()} almanzl. All rights reserved.
+      </p>
+    </div>
   `;
 
     try {
@@ -97,7 +119,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
             to: user.email,
             subject: 'Your password reset link (valid for 10 minutes)',
             text: `Reset your password: ${resetURL}`,
-            message,
+            html,
         });
 
         res.status(200).json({
