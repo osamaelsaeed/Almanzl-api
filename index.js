@@ -19,11 +19,14 @@ import cartRoutes from './src/routes/cart.routes.js';
 import statisticsRoutes from './src/routes/statistics.routes.js';
 import swaggerUi from 'swagger-ui-express';
 import pkg from 'fs-extra';
+import swaggerJSDoc from 'swagger-jsdoc';
 const { readFile } = pkg;
 
 const swaggerDocument = JSON.parse(
     await readFile(new URL('./swagger/swagger.json', import.meta.url))
 );
+
+const swaggerSpec = swaggerJSDoc({ definition: swaggerDocument, apis: [] });
 
 const app = express();
 // keep this route here before express.json Stripe requires the raw body to verify the signature.
@@ -55,7 +58,7 @@ const CSS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger
 app.use(
     '/api-docs',
     swaggerUi.serve,
-    swaggerUi.setup(swaggerDocument, {
+    swaggerUi.setup(swaggerSpec, {
         customCss:
             '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
         customCssUrl: CSS_URL,
@@ -64,7 +67,7 @@ app.use(
 
 app.get('/swagger.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
-    res.send(swaggerDocument);
+    res.send(swaggerSpec);
 });
 
 app.use('/api/products', productRouter);
