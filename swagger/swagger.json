@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Almanzl api",
-    "description": "Nodejs Advanced Course API Documentation",
+    "description": "API documentation for Almanzl application",
     "version": "1.0.0",
     "licenses": {
       "name": "MIT",
