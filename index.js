@@ -50,14 +50,11 @@ if (NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
-const CSS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css';
-
 app.use(
     '/api-docs',
     swaggerUi.serve,
     swaggerUi.setup(swaggerDocument, {
-        customCssUrl: CSS_URL,
-        customSiteTitle: 'Almanzl API Docs',
+        customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css',
     })
 );
 
