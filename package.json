@@ -8,7 +8,8 @@
         "build-swagger": "node combineSwagger.js",
         "dev": "npm run build-swagger && cross-env NODE_ENV=development nodemon index.js",
         "format": "prettier --write .",
-        "start": "cross-env NODE_ENV=production node index.js"
+        "start": "cross-env NODE_ENV=production node index.js",
+        "postinstall": "cp -r node_modules/swagger-ui-dist/* public/api-docs/"
     },
     "keywords": [],
     "author": "",
