@@ -4,10 +4,8 @@ import initDB from './src/config/db.js';
 import morgan from 'morgan';
 import { PORT, NODE_ENV, CLIENT_URL } from './src/config/config.js';
 import cors from 'cors';
-import swaggerUi from 'swagger-ui-express';
-import pkg from 'fs-extra';
-const { readFile } = pkg;
-import swaggerUiDist from 'swagger-ui-dist';
+
+initDB();
 
 import AppError from './src/utils/AppError.js';
 import productRouter from './src/routes/product.routes.js';
@@ -19,16 +17,17 @@ import stripeWebhookRoute from './src/routes/stripeWebhookRoute.js';
 import globalErrorHandler from './src/utils/globalErrorHandler.js';
 import cartRoutes from './src/routes/cart.routes.js';
 import statisticsRoutes from './src/routes/statistics.routes.js';
-
-initDB();
+import swaggerUi from 'swagger-ui-express';
+import pkg from 'fs-extra';
+const { readFile } = pkg;
 
 const swaggerDocument = JSON.parse(
     await readFile(new URL('./swagger/swagger.json', import.meta.url))
 );
 
 const app = express();
+// keep this route here before express.json Stripe requires the raw body to verify the signature.
 
-// Keep this before express.json() for Stripe
 app.use('/api/stripe', stripeWebhookRoute);
 
 app.set('query parser', 'extended');
@@ -51,18 +50,14 @@ if (NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
-const swaggerAssetsPath = swaggerUiDist.getAbsoluteFSPath();
-app.use('/api-docs-assets', express.static(swaggerAssetsPath));
+const CSS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css';
 
 app.use(
     '/api-docs',
     swaggerUi.serve,
     swaggerUi.setup(swaggerDocument, {
-        customCssUrl: 'https://unpkg.com/swagger-ui-dist/swagger-ui.css',
-        customJs: [
-            'https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js',
-            'https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js',
-        ],
+        customCssUrl: CSS_URL,
+        customSiteTitle: 'Almanzl API Docs',
     })
 );
 
@@ -82,5 +77,4 @@ app.use(globalErrorHandler);
 app.listen(PORT, () => {
     console.log(`app is running on port ${PORT}`);
 });
-
 export default app;
