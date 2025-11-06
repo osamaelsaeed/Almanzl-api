@@ -89,7 +89,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
     const html = `
     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; padding: 30px;">
       <div style="max-width: 500px; background-color: #ffffff; margin: auto; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden;">
-        <div style="background-color: #007BFF; color: white; text-align: center; padding: 20px;">
+        <div style="background-color: #232f3e; color: white; text-align: center; padding: 20px;">
           <h2 style="margin: 0;">Password Reset Request</h2>
         </div>
         <div style="padding: 25px; color: #333;">
