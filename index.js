@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express, { urlencoded } from 'express';
 import initDB from './src/config/db.js';
 import morgan from 'morgan';
-import { PORT, NODE_ENV, CLIENT_URL } from './src/config/config.js';
+import { PORT, NODE_ENV, CLIENT_URL, DOCS_URL } from './src/config/config.js';
 import cors from 'cors';
 
 initDB();
@@ -36,7 +36,7 @@ app.use(urlencoded({ extended: true }));
 
 app.use(
     cors({
-        origin: CLIENT_URL,
+        origin: [CLIENT_URL, DOCS_URL],
         credentials: true,
     })
 );
