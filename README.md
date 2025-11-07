@@ -40,4 +40,4 @@ This project is built by a team of 5 using **Express.js** for the backend and **
 
 ```bash
 git clone [https://github.com/your-username/almanzl.git](https://github.com/osamaelsaeed/Almanzl-api.git)
-cd Almanzl-api
+cd Almanzl-api.
